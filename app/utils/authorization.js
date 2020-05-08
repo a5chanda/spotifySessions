@@ -44,9 +44,13 @@ const getAuthorizationCode = async () => {
         '&redirect_uri=' +
         encodeURIComponent(redirectUrl),
     });
-    return result.params.code;
+    
+    if(result.params.code){
+        return result.params.code;
+    }
   } catch (err) {
     console.error(err);
+    return;
   }
    
 }
@@ -55,7 +59,7 @@ const getAuthorizationCode = async () => {
 const getTokens = async () => {
   try {
     const authorizationCode = await getAuthorizationCode() //we wrote this function above
-    const credentials = spotifyCredentials //we wrote this function above (could also run this outside of the functions and store the credentials in local scope)
+    const credentials = spotifyCredentials
     const credsB64 = btoa(`${credentials.clientId}:${credentials.clientSecret}`);
     const response = await fetch('https://accounts.spotify.com/api/token', {
       method: 'POST',
@@ -111,7 +115,10 @@ export const refreshTokens = async () => {
         await setUserData('accessToken', newAccessToken);
         if (newRefreshToken) {
             console.log(newRefreshToken);
+            console.log(expirationTime);
+            
           await setUserData('refreshToken', newRefreshToken);
+
         }
         await setUserData('expirationTime', expirationTime);
     } 

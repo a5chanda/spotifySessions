@@ -1,10 +1,12 @@
 import { Ionicons } from '@expo/vector-icons';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
+import { Container, Text, View } from 'native-base';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, View } from 'react-native';
+import { AsyncStorage, Platform, StatusBar, StyleSheet } from 'react-native';
+
 
 import BottomTabNavigator from './navigation/BottomTabNavigator';
 import LinkingConfiguration from './navigation/LinkingConfiguration';
@@ -13,6 +15,7 @@ import * as AuthSession from 'expo-auth-session';
 
 import {refreshTokens, getUserData, setUserData} from './utils/authorization.js';
 
+import LoginScreen from './screens/LoginScreen';
 
 const Stack = createStackNavigator();
 
@@ -29,6 +32,8 @@ export default function App(props) {
         await Font.loadAsync({
           ...Ionicons.font,
           'space-mono': require('./assets/fonts/SpaceMono-Regular.ttf'),
+          Roboto: require('native-base/Fonts/Roboto.ttf'),
+          Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
         });
       } catch (e) {
         // We might want to provide this error information to an error reporting service
@@ -38,18 +43,7 @@ export default function App(props) {
         SplashScreen.hide();
       }
     }
-    async function componentDidMount(){
-        const tokenExpirationTime = await getUserData('expirationTime');
-        if (!tokenExpirationTime || new Date().getTime() > tokenExpirationTime) {
-          await refreshTokens();
-          
-        } else {
-          this.setState({ accessTokenAvailable: true });
-        }
-    }
-
     loadResourcesAndDataAsync();
-    componentDidMount();
   }, []);
 
   if (!isLoadingComplete && !props.skipLoadingScreen) {
@@ -57,13 +51,13 @@ export default function App(props) {
   } else {
     return (
       <View style={styles.container}>
-          
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer linking={LinkingConfiguration}>
+        <LoginScreen/>
+        {/* <NavigationContainer linking={LinkingConfiguration}>
           <Stack.Navigator>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
           </Stack.Navigator>
-        </NavigationContainer>
+        </NavigationContainer> */}
       </View>
     
     );
@@ -72,7 +66,7 @@ export default function App(props) {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#fff',
+      flex: 1,
+      backgroundColor: '#202e3a',
   },
 });
