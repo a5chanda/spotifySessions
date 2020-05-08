@@ -16,6 +16,7 @@ import * as AuthSession from 'expo-auth-session';
 import {refreshTokens, getUserData, setUserData} from './utils/authorization.js';
 
 import LoginScreen from './screens/LoginScreen';
+import HomeScreen from './screens/HomeScreen';
 
 const Stack = createStackNavigator();
 
@@ -52,7 +53,8 @@ export default function App(props) {
     return (
       <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <LoginScreen/>
+        {/* <LoginScreen/> */}
+        <HomeScreen/>
         {/* <NavigationContainer linking={LinkingConfiguration}>
           <Stack.Navigator>
             <Stack.Screen name="Root" component={BottomTabNavigator} />
