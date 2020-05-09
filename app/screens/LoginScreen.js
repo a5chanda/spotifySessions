@@ -2,8 +2,6 @@ import React, { Component, useCallback, useState } from 'react';
 import {StyleSheet} from 'react-native';
 
 import { Container, Header, Content, Button, Text, View } from 'native-base';
-
-// import {refreshTokens, getUserData, setUserData} from '../utils/authorization.js';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 
 
