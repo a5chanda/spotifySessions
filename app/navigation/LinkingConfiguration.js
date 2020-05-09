@@ -6,6 +6,7 @@ export default {
     Root: {
       path: 'root',
       screens: {
+        Login: 'login',
         Home: 'home',
         Links: 'links',
       },

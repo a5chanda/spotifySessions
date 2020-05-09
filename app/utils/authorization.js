@@ -83,6 +83,7 @@ const getTokens = async () => {
     await setUserData('accessToken', accessToken);
     await setUserData('refreshToken', refreshToken);
     await setUserData('expirationTime', expirationTime);
+    this.setState({accessTokenAvailable: true});
   } catch (err) {
     console.error(err);
   }
