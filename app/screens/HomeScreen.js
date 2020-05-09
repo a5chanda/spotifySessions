@@ -30,20 +30,26 @@ class HomeScreen extends Component {
             userProfile: user,
             isProfileLoaded: true
         });
-      
+        console.log("Data:", (this.state.userProfile['images'].length));
     }
     return user;
   };
 
   render(){
     this.getUser();
-    console.log(this.state.userProfile);
+    
     return (
       
       <View style={styles.container}>
           <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
           <Text style={styles.logo}>Welcome {this.state.userProfile['display_name']}</Text>
-          <Button block rounded style={styles.button}> 
+          
+          { (this.state.isProfileLoaded && this.state.userProfile['images'].length) ? (<Image
+          style={styles.profileImage}
+          source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
+          }
+
+          <Button block rounded style={styles.button}>  
                 <Text style={styles.login}>New Session</Text> 
           </Button>
           <Button block rounded style={styles.button}> 
@@ -63,9 +69,14 @@ HomeScreen.navigationOptions = {
 
 
 const styles = StyleSheet.create({
+  profileImage: {
+    height: 64,
+    width: 64,
+    marginBottom: 32
+  },
   logo:{
     fontWeight:"bold",
-    fontSize:40,
+    fontSize:20,
     color:"#30ba7e",
     marginBottom:40
   },
