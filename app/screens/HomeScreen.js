@@ -30,7 +30,6 @@ class HomeScreen extends Component {
             userProfile: user,
             isProfileLoaded: true
         });
-        console.log("Data:", (this.state.userProfile['images'].length));
     }
     return user;
   };
@@ -48,9 +47,8 @@ class HomeScreen extends Component {
           style={styles.profileImage}
           source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
           }
-
           <Button block rounded style={styles.button}>  
-                <Text style={styles.login}>New Session</Text> 
+              <Text style={styles.login}>New Session</Text> 
           </Button>
           <Button block rounded style={styles.button}> 
                 <Text style={styles.login}>Join Session</Text> 
