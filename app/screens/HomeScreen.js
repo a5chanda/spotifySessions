@@ -1,5 +1,5 @@
 import * as WebBrowser from 'expo-web-browser';
-import * as React from 'react';
+import React, { Component } from 'react';
 import { Image, Platform, StyleSheet, TouchableOpacity } from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import { ScrollView } from 'react-native-gesture-handler';
@@ -7,69 +7,72 @@ import { ScrollView } from 'react-native-gesture-handler';
 import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
 
-export default function HomeScreen() {
-  return (
-    <View style={styles.container}>
-        <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
-        <Button block rounded style={styles.button}> 
-              <Text style={styles.login}>New Session</Text> 
-        </Button>
-        <Button block rounded style={styles.button}> 
-              <Text style={styles.login}>Join Session</Text> 
-        </Button>
-    </View>
-  );
+import SpotifyWebAPI from 'spotify-web-api-js';
+import {getValidSPObj} from '../utils/spotifyFunctions.js';
+
+
+class HomeScreen extends Component {
+  constructor(props){
+    super(props);
+    this.state = {
+      userProfile: {},
+      isProfileLoaded:false
+    };
+  }
+  
+  getUser = async () => {
+    const sp = await getValidSPObj();
+    const { id: userId } = await sp.getMe();
+    const user = await sp.getUser(userId);
+    // console.log(user);
+    if(!this.state.isProfileLoaded){
+        this.setState({
+            userProfile: user,
+            isProfileLoaded: true
+        });
+      
+    }
+    return user;
+  };
+
+  render(){
+    this.getUser();
+    console.log(this.state.userProfile);
+    return (
+      
+      <View style={styles.container}>
+          <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
+          <Text style={styles.logo}>Welcome {this.state.userProfile['display_name']}</Text>
+          <Button block rounded style={styles.button}> 
+                <Text style={styles.login}>New Session</Text> 
+          </Button>
+          <Button block rounded style={styles.button}> 
+                <Text style={styles.login}>Join Session</Text> 
+          </Button>
+      </View>
+    );
+  }
 }
+
+export default HomeScreen;
+
 
 HomeScreen.navigationOptions = {
   header: null,
 };
 
-// function DevelopmentModeNotice() {
-//   if (__DEV__) {
-//     const learnMoreButton = (
-//       <Text onPress={handleLearnMorePress} style={styles.helpLinkText}>
-//         Learn more
-//       </Text>
-//     );
-
-//     return (
-//       <Text style={styles.developmentModeText}>
-//         Development mode is enabled: your app will be slower but you can use useful development
-//         tools. {learnMoreButton}
-//       </Text>
-//     );
-//   } else {
-//     return (
-//       <Text style={styles.developmentModeText}>
-//         You are not in development mode: your app will run at full speed.
-//       </Text>
-//     );
-//   }
-// }
-
-function handleLearnMorePress() {
-  WebBrowser.openBrowserAsync('https://docs.expo.io/versions/latest/workflow/development-mode/');
-}
-
-function handleHelpPress() {
-  WebBrowser.openBrowserAsync(
-    'https://docs.expo.io/versions/latest/get-started/create-a-new-app/#making-your-first-change'
-  );
-}
 
 const styles = StyleSheet.create({
+  logo:{
+    fontWeight:"bold",
+    fontSize:40,
+    color:"#30ba7e",
+    marginBottom:40
+  },
   container: {
     flex: 1,
     alignItems: "center",
     backgroundColor: '#202e3a',
-  },
-  developmentModeText: {
-    marginBottom: 20,
-    color: 'rgba(0,0,0,0.4)',
-    fontSize: 14,
-    lineHeight: 19,
-    textAlign: 'center',
   },
   contentContainer: {
     paddingTop: 30,

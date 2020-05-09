@@ -34,6 +34,7 @@
     "react-native-safe-area-context": "0.7.3",
     "react-native-screens": "~2.2.0",
     "react-native-web": "~0.11.7",
+    "spotify-web-api-js": "^1.4.0",
     "uri-scheme": "^1.0.9-alpha.0"
   },
   "devDependencies": {
