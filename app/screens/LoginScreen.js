@@ -168,8 +168,14 @@ class LoginScreen extends Component {
                             <Text style={styles.login}>Login</Text> 
                         </Button>
                     ) :
-                    (    
-                        this.props.navigation.navigate('Home')
+                    (   
+                        <View>
+                            <Text style={styles.login}>Logged In!</Text> 
+                            <Button block rounded style={styles.button} onPress={() => this.props.navigation.navigate('Home')}> 
+                                <Text style={styles.login}>Continue</Text> 
+                            </Button> 
+                        </View>
+                        
                     )
                 }
             </Container>
@@ -205,3 +211,4 @@ const styles = StyleSheet.create({
         marginBottom:40
       }
 });
+

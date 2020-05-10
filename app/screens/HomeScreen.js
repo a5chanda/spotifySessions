@@ -30,7 +30,7 @@ class HomeScreen extends Component {
             userProfile: user,
             isProfileLoaded: true
         });
-        console.log("Data:", (this.state.userProfile['images'].length));
+        console.log("User:", (this.state.userProfile['display_name']));
     }
     return user;
   };
@@ -49,7 +49,7 @@ class HomeScreen extends Component {
           source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
           }
 
-          <Button block rounded style={styles.button}>  
+          <Button block rounded style={styles.button} onPress={() => this.props.navigation.navigate("Session", this.state.userProfile)}>  
                 <Text style={styles.login}>New Session</Text> 
           </Button>
           <Button block rounded style={styles.button}> 
