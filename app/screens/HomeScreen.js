@@ -34,6 +34,7 @@ class HomeScreen extends Component {
             userProfile: user,
             isProfileLoaded: true
         });
+        console.log("User:", (this.state.userProfile['display_name']));
     }
     return user;
   };
@@ -44,15 +45,19 @@ class HomeScreen extends Component {
     return (
       
       <View style={styles.container}>
-        <Modal transparent={true} visible ={this.state.newSession} animationType="fade">
+        <Modal transparent={false} visible ={this.state.newSession} animationType="fade">
           <View style={styles.modalContent}>
             <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
             <View>
               <TextInput placeholder="Enter Session Name" />
               <TextInput secureTextEntry={true} placeholder="Enter Password"/>
-              <Button block rounded style={styles.button}>  
-                  <Text style={styles.login}>Create New Session</Text> 
-              </Button>
+                <Button block rounded style={styles.button} onPress={ () => {
+                        this.props.navigation.navigate("Session", this.state.userProfile);
+                        this.setState({newSession: false});
+                    }
+                }>  
+                    <Text style={styles.login}> Create New Session</Text> 
+                </Button>
             </View>
           </View>
         </Modal>
