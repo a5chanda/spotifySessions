@@ -1,7 +1,8 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
-import { Image, Platform, StyleSheet, TouchableOpacity } from 'react-native';
+import { Image, Platform, StyleSheet,TouchableHighlight, TouchableOpacity, TextInput} from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
+import Modal from 'react-native-modal';
 import { ScrollView } from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
@@ -9,6 +10,7 @@ import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/Deprecate
 
 import SpotifyWebAPI from 'spotify-web-api-js';
 import {getValidSPObj} from '../utils/spotifyFunctions.js';
+import { AntDesign } from '@expo/vector-icons';
 
 
 class HomeScreen extends Component {
@@ -16,7 +18,9 @@ class HomeScreen extends Component {
     super(props);
     this.state = {
       userProfile: {},
-      isProfileLoaded:false
+      isProfileLoaded:false,
+      newSession: false,
+      joinSession: false
     };
   }
   
@@ -40,19 +44,43 @@ class HomeScreen extends Component {
     return (
       
       <View style={styles.container}>
-          <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
-          <Text style={styles.logo}>Welcome {this.state.userProfile['display_name']}</Text>
-          
-          { (this.state.isProfileLoaded && this.state.userProfile['images'].length) ? (<Image
-          style={styles.profileImage}
-          source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
-          }
-          <Button block rounded style={styles.button}>  
-              <Text style={styles.login}>New Session</Text> 
-          </Button>
-          <Button block rounded style={styles.button}> 
-                <Text style={styles.login}>Join Session</Text> 
-          </Button>
+        <Modal transparent={true} visible ={this.state.newSession} animationType="fade">
+          <View style={styles.modalContent}>
+            <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
+            <View>
+              <TextInput placeholder="Enter Session Name" />
+              <TextInput secureTextEntry={true} placeholder="Enter Password"/>
+              <Button block rounded style={styles.button}>  
+                  <Text style={styles.login}>Create New Session</Text> 
+              </Button>
+            </View>
+          </View>
+        </Modal>
+        <Modal visible ={this.state.joinSession} animationType="fade">
+          <View style={styles.modalContent}>
+            <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
+            <View>
+              <TextInput placeholder="Enter Session Name" />
+              <TextInput secureTextEntry={true} placeholder="Enter Password"/>
+              <Button block rounded style={styles.button}>  
+                  <Text style={styles.login}>Join Session</Text> 
+              </Button>
+            </View>
+          </View>
+        </Modal>
+        <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
+        <Text style={styles.logo}>Welcome {this.state.userProfile['display_name']}</Text>
+
+        { (this.state.isProfileLoaded && this.state.userProfile['images'].length) ? (<Image
+        style={styles.profileImage}
+        source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
+        }
+        <Button block rounded style={styles.button} onPress={()=> this.setState({newSession: true}) }>  
+          <Text style={styles.login}>New Session</Text> 
+        </Button>
+        <Button block rounded style={styles.button} onPress={()=> this.setState({joinSession: true}) }> 
+          <Text style={styles.login}>Join Session</Text> 
+        </Button>
       </View>
     );
   }
@@ -68,99 +96,41 @@ HomeScreen.navigationOptions = {
 
 const styles = StyleSheet.create({
   profileImage: {
-    height: 64,
-    width: 64,
+    flex:1,
+    height: 50,
+    width: 50,
     marginBottom: 32
   },
   logo:{
+    flex:1,
     fontWeight:"bold",
-    fontSize:20,
+    fontSize:25,
     color:"#30ba7e",
     marginBottom:40
   },
   container: {
-    flex: 1,
+    flexDirection: "column",
+    flex:1,
     alignItems: "center",
+    justifyContent: "center",
     backgroundColor: '#202e3a',
-  },
-  contentContainer: {
-    paddingTop: 30,
-  },
-  welcomeContainer: {
-    alignItems: 'center',
-    marginTop: 10,
-    marginBottom: 20,
   },
   welcomeImage: {
     flex: 1,
-    aspectRatio: 0.35,
+    aspectRatio: 0.9,
     resizeMode: 'contain'
   },
   button: {  
+    flex:1,
     backgroundColor:"#30ba7e",
     alignItems:"center",
-    marginBottom:10,
+    marginBottom:50,
     width: "90%",
-    marginLeft: "5%"
+    marginLeft: "5%",
   },
-  getStartedContainer: {
-    alignItems: 'center',
-    marginHorizontal: 50,
-  },
-  homeScreenFilename: {
-    marginVertical: 7,
-  },
-  codeHighlightText: {
-    color: 'rgba(96,100,109, 0.8)',
-  },
-  codeHighlightContainer: {
-    backgroundColor: 'rgba(0,0,0,0.05)',
-    borderRadius: 3,
-    paddingHorizontal: 4,
-  },
-  getStartedText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    lineHeight: 24,
-    textAlign: 'center',
-  },
-  tabBarInfoContainer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    ...Platform.select({
-      ios: {
-        shadowColor: 'black',
-        shadowOffset: { width: 0, height: -3 },
-        shadowOpacity: 0.1,
-        shadowRadius: 3,
-      },
-      android: {
-        elevation: 20,
-      },
-    }),
-    alignItems: 'center',
-    backgroundColor: '#fbfbfb',
-    paddingVertical: 20,
-  },
-  tabBarInfoText: {
-    fontSize: 17,
-    color: 'rgba(96,100,109, 1)',
-    textAlign: 'center',
-  },
-  navigationFilename: {
-    marginTop: 5,
-  },
-  helpContainer: {
-    marginTop: 15,
-    alignItems: 'center',
-  },
-  helpLink: {
-    paddingVertical: 15,
-  },
-  helpLinkText: {
-    fontSize: 14,
-    color: '#2e78b7',
-  },
+  modalContent: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center"
+  }
 });
