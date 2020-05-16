@@ -11,7 +11,9 @@ class Room{
         this.host = host; //Member that is host
     }
 
-    addMember(memberName){}
+    addMember(memberName){
+        this.Members[memberName] = memberName;
+    }
 
     removeMember(memberName){}
 
