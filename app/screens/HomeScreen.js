@@ -54,13 +54,17 @@ class HomeScreen extends Component {
               <TextInput secureTextEntry={true} placeholder="Enter Password"/>
                 <Button block rounded style={styles.button} onPress={ () => {
                         if(this.state.roomName.length){
-                            this.props.navigation.navigate("Session", {"userProfile": this.state.userProfile, "roomName": this.state.roomName});
+                            this.props.navigation.navigate("Session", 
+                            {
+                                "userProfile": this.state.userProfile, 
+                                "roomName": this.state.roomName, 
+                                "host": this.state.userProfile['display_name']
+                            });
                             this.setState({newSession: false});
                         }
                         else{
                             <Text>Please Enter Room Name</Text>
-                        }
-                        
+                        } 
                     }
                 }>  
                     <Text style={styles.login}> Create New Session</Text> 

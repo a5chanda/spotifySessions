@@ -8,8 +8,11 @@ import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
 
 import SpotifyWebAPI from 'spotify-web-api-js';
+import {getUserData} from '../utils/authorization.js';
 import {getValidSPObj} from '../utils/spotifyFunctions.js';
 import {socket} from '../utils/socketConnection.js'
+
+
 
 
 class SessionScreen extends Component {
@@ -21,13 +24,30 @@ class SessionScreen extends Component {
             chatMessage: "",
             chatMessages: [],
             roomName: props['route']['params']['roomName'],
-            isConnected: this.socket.connected
+            isConnected: this.socket.connected,
+            host: props['route']['params']['host']
         };
+
+        //If socket is connected, create room if the host is connecting
         if(this.state.isConnected){
-            console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
-            this.socket.emit("join room", this.state.roomName);
+            if(this.state.host === this.state.userProfile['display_name']){
+                console.log("Loading room");
+                this.createRoom();
+            }
+            // this.socket.emit("join room", this.state.roomName);
         }
-        
+    }
+
+    async createRoom(){
+        console.log("Creating Room:", this.state['roomName'], "Host:", this.state['userProfile']['display_name']);
+        let authHost = await getUserData('accessToken');
+        this.socket.emit("create room", 
+        {
+            name: this.state.roomName,
+            user: this.state.userProfile['display_name'],
+            isHost: true,
+            authToken: authHost
+        });
     }
     
 
@@ -47,12 +67,14 @@ class SessionScreen extends Component {
         }
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
+
     componentWillUnmount(){
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton());
         this.socket.disconnect();
         this.setState({isConnected: false});
         // this.disconnect();
     }
+
 
     handleBackButton() {
         return true;
@@ -85,33 +107,21 @@ class SessionScreen extends Component {
     return (
 
       
-      <View style={styles.container}>
-          {/* <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image> */}
-          {/* <Text style={styles.logo}>Welcome {this.props.userProfile['display_name']}</Text> */}
-          
-          {/* { (this.state.isProfileLoaded && this.state.userProfile['images'].length) ? (<Image
-          style={styles.profileImage}
-          source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
-          } */}
+        <View style={styles.container}>
 
-          {/* <Button block rounded style={styles.button}>  
-            <Text style={styles.login}>New Session</Text> 
-          </Button> */}
             <Button style={styles.button} onPress={()=> this.disconnect()}>
-                 <Text>Disconnect</Text>
+                <Text>Disconnect</Text>
             </Button>
 
-        {chatMessages}
-        <TextInput
-          style={{height: 40, borderWidth: 2, top: 600}}
-          autoCorrect={false}
-          value={this.state.chatMessage}
-          onSubmitEditing={() => this.submitChatMessage()}
-          onChangeText={chatMessage => {
-            this.setState({chatMessage});
-          }}
-        />
-      </View>
+            {chatMessages}
+            <TextInput
+                style={{height: 40, borderWidth: 2, top: 600}}
+                autoCorrect={false}
+                value={this.state.chatMessage}
+                onSubmitEditing={() => this.submitChatMessage()}
+                onChangeText={chatMessage => {this.setState({chatMessage});}}
+            />
+        </View>
     );
   }
 }
