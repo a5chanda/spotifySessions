@@ -1,6 +1,6 @@
 import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
-import { Image, Platform, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
+import { BackHandler, Image, Platform, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import { ScrollView } from 'react-native-gesture-handler';
 
@@ -9,51 +9,75 @@ import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/Deprecate
 
 import SpotifyWebAPI from 'spotify-web-api-js';
 import {getValidSPObj} from '../utils/spotifyFunctions.js';
+import {socket} from '../utils/socketConnection.js'
 
-
-import io from "socket.io-client";
-import {serverURI} from "../config/env.js";
-
-const socket = io(serverURI, {transports: ['websocket']});
 
 class SessionScreen extends Component {
     constructor(props){
         super(props);
         this.socket = socket;
-        console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
         this.state = {
             userProfile: props['route']['params']['userProfile'],  
             chatMessage: "",
             chatMessages: [],
-            roomName: props['route']['params']['roomName']
+            roomName: props['route']['params']['roomName'],
+            isConnected: this.socket.connected
         };
-        this.socket.emit("join room", this.state.roomName);
+        if(this.state.isConnected){
+            console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
+            this.socket.emit("join room", this.state.roomName);
+        }
+        
     }
+    
 
     componentDidMount() {
-        this.socket.on("chat message", msg => {
-            this.setState({ chatMessages: [...this.state.chatMessages, msg]});
-        });
-        this.socket.on("join room", data => {
-            console.log(data);
-        });
+        if(!this.socket.connected || !this.state.isConnected){
+            this.socket.connect();
+            this.socket.emit("join room", this.state.roomName);
+            this.setState({isConnected: true});
+        }
+        else{
+            this.socket.on("chat message", msg => {
+                this.setState({ chatMessages: [...this.state.chatMessages, msg]});
+            });
+            this.socket.on("join room", data => {
+                console.log("Data:", data);
+            });
+        }
+        BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
-    componentDidUpdate(){
+    componentWillUnmount(){
+        BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton());
+        this.socket.disconnect();
+        this.setState({isConnected: false});
+        // this.disconnect();
+    }
 
+    handleBackButton() {
+        return true;
     }
+
     submitChatMessage() {
         this.socket.emit('chat message', this.state.chatMessage);
         this.setState({chatMessage: ''});
+        var song = "track:"+this.state.chatMessage;
+        this.getSong(song);
     }
 
     getSong = async (data) => {
       const sp = await getValidSPObj();
-      sp.searchTracks(data,).then(result => console.log("Song: ", result));
-    };
+      console.log("SONGGGGGGG\n\n\n\n\n\n\n");
+      sp.searchTracks(data, {limit: 3, offset: 0, market: "US"} ).then(result => console.log("Song: ", result.tracks.items[0]));
+    };  
+
+    disconnect(){
+        this.setState({isConnected: false});
+        this.socket.disconnect();
+        this.props.navigation.goBack()
+    }
 
   render(){
-    var song = "track:"+this.state.chatMessage;
-    this.getSong(song);
     // console.log("Session: ", this.state.chatMessages);
     const chatMessages = this.state.chatMessages.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
@@ -73,6 +97,9 @@ class SessionScreen extends Component {
           {/* <Button block rounded style={styles.button}>  
             <Text style={styles.login}>New Session</Text> 
           </Button> */}
+            <Button style={styles.button} onPress={()=> this.disconnect()}>
+                 <Text>Disconnect</Text>
+            </Button>
 
         {chatMessages}
         <TextInput
@@ -97,46 +124,13 @@ const styles = StyleSheet.create({
       flex: 1,
       backgroundColor: '#F5FCFF',
     },
+    button: {  
+        backgroundColor:"#30ba7e",
+        alignItems:"center",
+        marginBottom:10,
+        width: "90%",
+        marginLeft: "5%",
+        marginTop: "10%"
+      }
   });
 
-
-// const styles = StyleSheet.create({
-//   profileImage: {
-//     height: 64,
-//     width: 64,
-//     marginBottom: 32
-//   },
-//   logo:{
-//     fontWeight:"bold",
-//     fontSize:20,
-//     color:"#30ba7e",
-//     marginBottom:40
-//   },
-//   container: {
-//     flex: 1,
-//     alignItems: "center",
-//     backgroundColor: '#202e3a',
-//   },
-//   contentContainer: {
-//     paddingTop: 30,
-//   },
-//   welcomeContainer: {
-//     alignItems: 'center',
-//     marginTop: 10,
-//     marginBottom: 20,
-//   },
-//   welcomeImage: {
-//     flex: 1,
-//     aspectRatio: 0.35,
-//     resizeMode: 'contain'
-//   },
-//   button: {  
-//     backgroundColor:"#30ba7e",
-//     alignItems:"center",
-//     marginBottom:10,
-//     width: "90%",
-//     marginLeft: "5%"
-//   },
-
-
-// });

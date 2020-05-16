@@ -20,6 +20,7 @@ import SessionScreen from './screens/SessionScreen';
 
 const Stack = createStackNavigator();
 
+// const socket = io(serverURI, {transports: ['websocket']});
 
 export default function App(props) {
   const [isLoadingComplete, setLoadingComplete] = React.useState(false);
@@ -37,6 +38,7 @@ export default function App(props) {
           Roboto: require('native-base/Fonts/Roboto.ttf'),
           Roboto_medium: require('native-base/Fonts/Roboto_medium.ttf')
         });
+
       } catch (e) {
         // We might want to provide this error information to an error reporting service
         console.warn(e);

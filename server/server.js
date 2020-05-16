@@ -15,7 +15,6 @@ io.on('connection', (socket) => {
   socket.on('chat message', (msg) => {
     console.log('message: ' + msg);
     var room = Object.keys(socket.rooms)[1]; 
-    
     io.sockets.in(room).emit('chat message', msg);
   });
 
@@ -33,9 +32,10 @@ io.on('connection', (socket) => {
         var secondKey = Object.keys(socket.rooms)[1]; 
 
         console.log("Room:", secondKey);
-        io.sockets.in(roomName).emit("Joined Room:");
         
-    });  
+        
+    });  io.sockets.in(roomName).emit('join room', "Joined Room:" + roomName);
+
     
     
   });
