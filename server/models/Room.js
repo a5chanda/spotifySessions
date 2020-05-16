@@ -15,7 +15,9 @@ class Room{
         this.Members[memberName] = memberName;
     }
 
-    removeMember(memberName){}
+    removeMember(memberName){
+        delete this.Members[memberName];
+    }
 
     addSong(trackID){}
 

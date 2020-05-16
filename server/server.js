@@ -15,6 +15,13 @@ app.get('/', (req, res) => {
 });
 
 
+//Room Object from client{
+//     name: "",
+//     user: "",
+//     isHost: bool,
+//     authToken: ""
+// }
+
 function createRoom(room, socket){
     console.log("New Room: ", room);
     let newRoom = new Room(room.name, room.user);
@@ -33,14 +40,20 @@ function joinRoom(room, socket){
         resolve(socket.join(room.name));
     });
     join.then(()=>{
-        // var secondKey = Object.key(socket.rooms)[1];
         console.log("Joined Room:", room.name);
-        
         let r = rooms.get(room.name);
         r.addMember(room.user);
         console.log("Rooms", rooms);
         io.sockets.in(room.name).emit('join room', "Joined Room:" + room.name);
     });
+}
+
+function leaveRoom(room, socket){
+    let r = rooms.get(room.name);
+    r.removeMember(room.user);
+    io.sockets.in(room.name).emit("leave room", "User:" + room.user + "left the room");
+    console.log(rooms);
+    socket.leave(room.name);
 }
 
 io.on('connection', (socket) => {
@@ -56,8 +69,11 @@ io.on('connection', (socket) => {
 
   socket.on('join room', (room)=> joinRoom(room, socket));  
 
+  socket.on('leave room', (room) => leaveRoom(room, socket));
+
 
   socket.on('disconnect', () => {
+    var roomName = Object.keys(socket.rooms)[1]; 
     console.log('user disconnected');
   });
 });

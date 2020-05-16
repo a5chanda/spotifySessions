@@ -116,6 +116,17 @@ class SessionScreen extends Component {
         this.setState({roomCreated: true, joinedRoom: true});
     }
     
+    leaveRoom(){
+        console.log("Leaving Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
+        this.socket.emit("leave room", 
+        {
+            name: this.state.roomName,
+            user: this.state.userProfile['display_name'],
+            isHost: false,
+            authToken: ""
+        });
+        
+    }
 
     handleBackButton() {
         return true;
@@ -135,6 +146,7 @@ class SessionScreen extends Component {
     };  
 
     disconnect(){
+        this.leaveRoom();
         this.setState({isConnected: false, isCreatingRoom: null, roomCreated: false, joiningRoom: false});
         this.socket.disconnect();
         this.props.navigation.goBack()
