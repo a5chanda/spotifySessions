@@ -9,6 +9,10 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
+app.post('/session', (req, res)=>{
+  res.send("post data");
+});
+
 io.on('connection', (socket) => {
   console.log(socket.client.id, ' a user connected');
 
@@ -17,7 +21,10 @@ io.on('connection', (socket) => {
     io.emit('chat message', msg);
   });
 
-  socket.on('join room',)
+
+  socket.on('join room', function (room) {
+    socket.join(room);
+  });
 
   socket.on('disconnect', () => {
     console.log('user disconnected');
