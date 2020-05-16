@@ -16,32 +16,31 @@ import {serverURI} from "../config/env.js";
 
 
 class SessionScreen extends Component {
-  constructor(props){
-    super(props);
-    this.socket = io(serverURI);
-    // console.log("Session: ", props.route.params);
-    this.state = {
-      userProfile: props['route']['params'],  
-      chatMessage: "",
-      chatMessages: []
-    };
-  }
+    constructor(props){
+        super(props);
+        this.socket = io(serverURI);
+        console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
+        this.state = {
+        userProfile: props['route']['params']['userProfile'],  
+        chatMessage: "",
+        chatMessages: [],
+        roomName: props['route']['params']['roomName']
+        };
+    }
 
-  componentDidMount() {
-    console.log("mounted")
-     this.socket.on("chat message", msg => {
-           this.setState({ chatMessages: [...this.state.chatMessages, msg]   
-      });
-   });
- }
- submitChatMessage() {
-    this.socket.emit('chat message', this.state.chatMessage);
-    this.setState({chatMessage: ''});
-  }
+    componentDidMount() {
+        this.socket.on("chat message", msg => {
+            this.setState({ chatMessages: [...this.state.chatMessages, msg]});
+        });
+    }
+    submitChatMessage() {
+        this.socket.emit('chat message', this.state.chatMessage);
+        this.setState({chatMessage: ''});
+    }
 
 
   render(){
-    console.log("Session: ", this.state.chatMessages);
+    // console.log("Session: ", this.state.chatMessages);
     const chatMessages = this.state.chatMessages.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
         ));

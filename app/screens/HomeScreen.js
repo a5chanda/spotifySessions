@@ -20,7 +20,8 @@ class HomeScreen extends Component {
       userProfile: {},
       isProfileLoaded:false,
       newSession: false,
-      joinSession: false
+      joinSession: false,
+      roomName: ""
     };
   }
   
@@ -32,7 +33,7 @@ class HomeScreen extends Component {
     if(!this.state.isProfileLoaded){
         this.setState({
             userProfile: user,
-            isProfileLoaded: true
+            isProfileLoaded: true,
         });
         console.log("User:", (this.state.userProfile['display_name']));
     }
@@ -49,11 +50,17 @@ class HomeScreen extends Component {
           <View style={styles.modalContent}>
             <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
             <View>
-              <TextInput placeholder="Enter Session Name" />
+              <TextInput placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
               <TextInput secureTextEntry={true} placeholder="Enter Password"/>
                 <Button block rounded style={styles.button} onPress={ () => {
-                        this.props.navigation.navigate("Session", this.state.userProfile);
-                        this.setState({newSession: false});
+                        if(this.state.roomName.length){
+                            this.props.navigation.navigate("Session", {"userProfile": this.state.userProfile, "roomName": this.state.roomName});
+                            this.setState({newSession: false});
+                        }
+                        else{
+                            <Text>Please Enter Room Name</Text>
+                        }
+                        
                     }
                 }>  
                     <Text style={styles.login}> Create New Session</Text> 

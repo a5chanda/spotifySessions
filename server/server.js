@@ -22,8 +22,9 @@ io.on('connection', (socket) => {
   });
 
 
-  socket.on('join room', function (room) {
-    socket.join(room);
+  socket.on('join room', function (roomName) {
+    socket.join(roomName);
+    io.sockets.in(roomName).emit("Joined Room: " + roomName);
   });
 
   socket.on('disconnect', () => {
