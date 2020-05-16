@@ -14,24 +14,32 @@ import {getValidSPObj} from '../utils/spotifyFunctions.js';
 import io from "socket.io-client";
 import {serverURI} from "../config/env.js";
 
+const socket = io(serverURI, {transports: ['websocket']});
 
 class SessionScreen extends Component {
     constructor(props){
         super(props);
-        this.socket = io(serverURI);
+        this.socket = socket;
         console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
         this.state = {
-        userProfile: props['route']['params']['userProfile'],  
-        chatMessage: "",
-        chatMessages: [],
-        roomName: props['route']['params']['roomName']
+            userProfile: props['route']['params']['userProfile'],  
+            chatMessage: "",
+            chatMessages: [],
+            roomName: props['route']['params']['roomName']
         };
+        this.socket.emit("join room", this.state.roomName);
     }
 
     componentDidMount() {
         this.socket.on("chat message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, msg]});
         });
+        this.socket.on("join room", data => {
+            console.log(data);
+        });
+    }
+    componentDidUpdate(){
+
     }
     submitChatMessage() {
         this.socket.emit('chat message', this.state.chatMessage);

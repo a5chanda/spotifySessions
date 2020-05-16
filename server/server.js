@@ -9,10 +9,6 @@ app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
 
-app.post('/session', (req, res)=>{
-  res.send("post data");
-});
-
 io.on('connection', (socket) => {
   console.log(socket.client.id, ' a user connected');
 
@@ -23,8 +19,19 @@ io.on('connection', (socket) => {
 
 
   socket.on('join room', function (roomName) {
-    socket.join(roomName);
-    io.sockets.in(roomName).emit("Joined Room: " + roomName);
+      
+    let join = new Promise((resolve, reject) => {
+        console.log(socket.client.id, ' socket joining');
+        resolve(socket.join(roomName));
+    });
+    
+    join.then(() =>{
+        console.log("Joined Room: ", roomName);
+        console.log(socket.client.id, 'joined');
+        io.sockets.in(roomName).emit("Joined Room:");
+    });  
+    
+    
   });
 
   socket.on('disconnect', () => {
