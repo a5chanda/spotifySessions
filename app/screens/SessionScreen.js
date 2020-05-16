@@ -38,8 +38,14 @@ class SessionScreen extends Component {
         this.setState({chatMessage: ''});
     }
 
+    getSong = async (data) => {
+      const sp = await getValidSPObj();
+      sp.searchTracks(data,).then(result => console.log("Song: ", result));
+    };
 
   render(){
+    var song = "track:"+this.state.chatMessage;
+    this.getSong(song);
     // console.log("Session: ", this.state.chatMessages);
     const chatMessages = this.state.chatMessages.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
@@ -70,7 +76,6 @@ class SessionScreen extends Component {
             this.setState({chatMessage});
           }}
         />
-
       </View>
     );
   }
