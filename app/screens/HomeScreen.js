@@ -58,7 +58,8 @@ class HomeScreen extends Component {
                             {
                                 "userProfile": this.state.userProfile, 
                                 "roomName": this.state.roomName, 
-                                "host": this.state.userProfile['display_name']
+                                "host": this.state.userProfile['display_name'],
+                                "isCreatingRoom": true,
                             });
                             this.setState({newSession: false});
                         }

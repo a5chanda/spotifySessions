@@ -25,16 +25,18 @@ class SessionScreen extends Component {
             chatMessages: [],
             roomName: props['route']['params']['roomName'],
             isConnected: this.socket.connected,
-            host: props['route']['params']['host']
+            isCreatingRoom: props['route']['params']['isCreatingRoom'], //true if new session being created
+                                                                        //false if joining a session
+            host: props['route']['params']['host'],
+            roomCreated: null //true if room created, false if it isnt
         };
 
         //If socket is connected, create room if the host is connecting
-        if(this.state.isConnected){
+        if(this.state.isConnected && this.state.isCreatingRoom){
             if(this.state.host === this.state.userProfile['display_name']){
                 console.log("Loading room");
                 this.createRoom();
             }
-            // this.socket.emit("join room", this.state.roomName);
         }
     }
 
@@ -48,16 +50,30 @@ class SessionScreen extends Component {
             isHost: true,
             authToken: authHost
         });
+        this.setState({isCreatingRoom: false, roomCreated: true});
     }
     
 
     componentDidMount() {
-        if(!this.socket.connected || !this.state.isConnected){
+
+        //if socket is disconnected, reconnect
+        if((!this.socket.connected || !this.state.isConnected)){
             this.socket.connect();
-            this.socket.emit("join room", this.state.roomName);
+            if(!this.state.roomCreated){
+                this.createRoom();
+            }
+            else{
+                this.socket.emit("join room", this.state.roomName);
+            }
+
+            
             this.setState({isConnected: true});
         }
         else{
+            this.socket.on("create room", isCreated => {
+                //if Room is successfully created then set state for creating to false
+                this.setState({isCreatingRoom: !isCreated});
+            })
             this.socket.on("chat message", msg => {
                 this.setState({ chatMessages: [...this.state.chatMessages, msg]});
             });
@@ -94,21 +110,17 @@ class SessionScreen extends Component {
     };  
 
     disconnect(){
-        this.setState({isConnected: false});
+        this.setState({isConnected: false, isCreatingRoom: null});
         this.socket.disconnect();
         this.props.navigation.goBack()
     }
 
   render(){
-    // console.log("Session: ", this.state.chatMessages);
     const chatMessages = this.state.chatMessages.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
         ));
-    return (
-
-      
+    return (    
         <View style={styles.container}>
-
             <Button style={styles.button} onPress={()=> this.disconnect()}>
                 <Text>Disconnect</Text>
             </Button>

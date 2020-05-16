@@ -5,6 +5,7 @@ var http = require('http').createServer(app);
 var io = require('socket.io').listen(http);
 let cors = require ('cors');
 
+//Keep track of the rooms in the server
 let rooms = {};
 
 app.use(cors());
@@ -12,6 +13,15 @@ app.use(cors());
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/index.html');
 });
+
+
+function createRoom(room){
+    console.log("room: ", room);
+    let newRoom = new Room(room.name, room.user);
+    rooms[room['name']] = newRoom;
+    console.log(rooms);
+    
+}
 
 io.on('connection', (socket) => {
   console.log(socket.client.id, ' a user connected');
@@ -22,13 +32,7 @@ io.on('connection', (socket) => {
     io.sockets.in(room).emit('chat message', msg);
   });
 
-  socket.on('create room', function(room){
-    console.log("room: ", room);
-    let newRoom = new Room(room.name, room.user);
-    rooms[room['name']] = newRoom;
-    console.log(rooms);
-
-  });
+  socket.on('create room', (room) => createRoom(room));
 
   socket.on('join room', function (roomName) {
     let join = new Promise((resolve, reject) => {
