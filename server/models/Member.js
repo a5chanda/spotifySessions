@@ -1,6 +1,6 @@
 class Member{
     constructor(user){
-        this.name = user.name,
+        this.name = user.user,
         this.isHost = user.isHost,
         this.authToken = user.authToken,
         this.userID = user['id'] ? user['id'] : ""

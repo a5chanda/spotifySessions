@@ -30,7 +30,9 @@ class SessionScreen extends Component {
                                                                         //false if joining a session
             host: props['route']['params']['host'] ? props['route']['params']['host'] : "",
             roomCreated: props['route']['params']['roomCreated'] ? props['route']['params']['roomCreated']: null, //true if room created, false if it isnt
-            joinedRoom: false
+            joinedRoom: false,
+            songQueue: [],
+            songID: ""
         };
 
 
@@ -69,11 +71,16 @@ class SessionScreen extends Component {
                 this.setState({isCreatingRoom: !isCreated, roomCreated: isCreated});
             })
             this.socket.on("join room", data => {
-                console.log(data);
-                this.setState({isCreatingRoom: false, roomCreated: true});
+                console.log("Joined:", data['roomName']);
+
+                this.setState({isCreatingRoom: false, roomCreated: true, songQueue: data['Queue']});
             });
             this.socket.on("chat message", msg => {
                 this.setState({ chatMessages: [...this.state.chatMessages, msg]});
+            });
+            this.socket.on("add song", song => { 
+                this.setState({songQueue: [...this.state.songQueue, song]});
+                console.log("Updated Queue", this.state.songQueue);
             });
     //    }
         
@@ -115,6 +122,11 @@ class SessionScreen extends Component {
         });
         this.setState({roomCreated: true, joinedRoom: true});
     }
+
+    async addSong(song){
+        this.socket.emit("add song", song);
+        this.setState({songID: ""});
+    }
     
     leaveRoom(){
         console.log("Leaving Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
@@ -137,6 +149,7 @@ class SessionScreen extends Component {
         this.setState({chatMessage: ''});
         var song = "track:"+this.state.chatMessage;
         this.getSong(song);
+        this.addSong(this.state.chatMessage);
     }
 
     getSong = async (data) => {
@@ -153,7 +166,7 @@ class SessionScreen extends Component {
     }
 
   render(){
-    const chatMessages = this.state.chatMessages.map(chatMessage => (
+    const chatMessages = this.state.songQueue.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
         ));
     return ( 

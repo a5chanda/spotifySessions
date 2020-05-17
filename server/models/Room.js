@@ -4,22 +4,39 @@ class Room{
 
     //1 Param Constructor
     constructor(roomName, host, password){
-        this.Members = {}; // map of member objects
-        this.QueueItem = [];
+        this.Members = new Map(); // map of member objects
+        this.Queue = [];
         this.roomName = roomName;
         this.password = password ? password : "";
         this.host = host; //Member that is host
     }
 
-    addMember(memberName){
-        this.Members[memberName] = memberName;
+
+//User Object from client{
+//     roomName: "",
+//     user: "",
+//     isHost: bool,
+//     authToken: ""
+// }
+    addMember(user){
+        let m = new Member(user);
+        console.log(m);
+        this.Members.set(user.user, m);
     }
 
     removeMember(memberName){
-        delete this.Members[memberName];
+        // delete this.Members[memberName];
+        this.Members.delete(memberName);
     }
 
-    addSong(trackID){}
+    //Returns the total number of members in the room
+    getRoomSize(){
+        return Object.keys(this.Members).length;
+    }
+
+    addSong(trackID){
+        this.Queue.push(trackID);
+    }
 
     playSong(trackID){}
 
