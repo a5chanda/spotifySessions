@@ -1,0 +1,157 @@
+Array [
+  Object {
+    "album": Object {
+      "album_type": "album",
+      "artists": Array [
+        Object {
+          "external_urls": Object {
+            "spotify": "https://open.spotify.com/artist/0hEurMDQu99nJRq8pTxO14",
+          },
+          "href": "https://api.spotify.com/v1/artists/0hEurMDQu99nJRq8pTxO14",
+          "id": "0hEurMDQu99nJRq8pTxO14",
+          "name": "John Mayer",
+          "type": "artist",
+          "uri": "spotify:artist:0hEurMDQu99nJRq8pTxO14",
+        },
+      ],
+      "external_urls": Object {
+        "spotify": "https://open.spotify.com/album/1Xsprdt1q9rOzTic7b9zYM",
+      },
+      "href": "https://api.spotify.com/v1/albums/1Xsprdt1q9rOzTic7b9zYM",
+      "id": "1Xsprdt1q9rOzTic7b9zYM",
+      "images": Array [
+        Object {
+          "height": 640,
+          "url": "https://i.scdn.co/image/ab67616d0000b2737af5fdc5ef048a68db62b85f",
+          "width": 640,
+        },
+        Object {
+          "height": 300,
+          "url": "https://i.scdn.co/image/ab67616d00001e027af5fdc5ef048a68db62b85f",
+          "width": 300,
+        },
+        Object {
+          "height": 64,
+          "url": "https://i.scdn.co/image/ab67616d000048517af5fdc5ef048a68db62b85f",
+          "width": 64,
+        },
+      ],
+      "name": "Continuum",
+      "release_date": "2006-09-11",
+      "release_date_precision": "day",
+      "total_tracks": 12,
+      "type": "album",
+      "uri": "spotify:album:1Xsprdt1q9rOzTic7b9zYM",
+    },
+    "artists": Array [
+      Object {
+        "external_urls": Object {
+          "spotify": "https://open.spotify.com/artist/0hEurMDQu99nJRq8pTxO14",
+        },
+        "href": "https://api.spotify.com/v1/artists/0hEurMDQu99nJRq8pTxO14",
+        "id": "0hEurMDQu99nJRq8pTxO14",
+        "name": "John Mayer",
+        "type": "artist",
+        "uri": "spotify:artist:0hEurMDQu99nJRq8pTxO14",
+      },
+    ],
+    "disc_number": 1,
+    "duration_ms": 245826,
+    "explicit": false,
+    "external_ids": Object {
+      "isrc": "USSM10603628",
+    },
+    "external_urls": Object {
+      "spotify": "https://open.spotify.com/track/3SktMqZmo3M9zbB7oKMIF7",
+    },
+    "href": "https://api.spotify.com/v1/tracks/3SktMqZmo3M9zbB7oKMIF7",
+    "id": "3SktMqZmo3M9zbB7oKMIF7",
+    "is_local": false,
+    "is_playable": true,
+    "name": "Gravity",
+    "popularity": 74,
+    "preview_url": "https://p.scdn.co/mp3-preview/c0c76e643625fbad2c3b21b1407a2964fb14ee47?cid=f9cba0b4718a4d2e8e8228f8da4b755f",
+    "track_number": 4,
+    "type": "track",
+    "uri": "spotify:track:3SktMqZmo3M9zbB7oKMIF7",
+  },
+  Object {
+    "album": Object {
+      "album_type": "album",
+      "artists": Array [
+        Object {
+          "external_urls": Object {
+            "spotify": "https://open.spotify.com/artist/2Sqr0DXoaYABbjBo9HaMkM",
+          },
+          "href": "https://api.spotify.com/v1/artists/2Sqr0DXoaYABbjBo9HaMkM",
+          "id": "2Sqr0DXoaYABbjBo9HaMkM",
+          "name": "Sara Bareilles",
+          "type": "artist",
+          "uri": "spotify:artist:2Sqr0DXoaYABbjBo9HaMkM",
+        },
+      ],
+      "external_urls": Object {
+        "spotify": "https://open.spotify.com/album/2Z9WUERfMjOgQ6ze9TcGbF",
+      },
+      "href": "https://api.spotify.com/v1/albums/2Z9WUERfMjOgQ6ze9TcGbF",
+      "id": "2Z9WUERfMjOgQ6ze9TcGbF",
+      "images": Array [
+        Object {
+          "height": 640,
+          "url": "https://i.scdn.co/image/ab67616d0000b2731c3e0a58f3ee28af2922e351",
+          "width": 640,
+        },
+        Object {
+          "height": 300,
+          "url": "https://i.scdn.co/image/ab67616d00001e021c3e0a58f3ee28af2922e351",
+          "width": 300,
+        },
+        Object {
+          "height": 64,
+          "url": "https://i.scdn.co/image/ab67616d000048511c3e0a58f3ee28af2922e351",
+          "width": 64,
+        },
+      ],
+      "name": "Little Voice",
+      "release_date": "2007-07-03",
+      "release_date_precision": "day",
+      "total_tracks": 12,
+      "type": "album",
+      "uri": "spotify:album:2Z9WUERfMjOgQ6ze9TcGbF",
+    },
+    "artists": Array [
+      Object {
+        "external_urls": Object {
+          "spotify": "https://open.spotify.com/artist/2Sqr0DXoaYABbjBo9HaMkM",
+        },
+        "href": "https://api.spotify.com/v1/artists/2Sqr0DXoaYABbjBo9HaMkM",
+        "id": "2Sqr0DXoaYABbjBo9HaMkM",
+        "name": "Sara Bareilles",
+        "type": "artist",
+        "uri": "spotify:artist:2Sqr0DXoaYABbjBo9HaMkM",
+      },
+    ],
+    "disc_number": 1,
+    "duration_ms": 232760,
+    "explicit": false,
+    "external_ids": Object {
+      "isrc": "USSM10700068",
+    },
+    "external_urls": Object {
+      "spotify": "https://open.spotify.com/track/4oa14QBfWRDfJy2agySy0L",
+    },
+    "href": "https://api.spotify.com/v1/tracks/4oa14QBfWRDfJy2agySy0L",
+    "id": "4oa14QBfWRDfJy2agySy0L",
+    "is_local": false,
+    "is_playable": true,
+    "name": "Gravity",
+    "popularity": 71,
+    "preview_url": "https://p.scdn.co/mp3-preview/63322f828978bc6b13af66a3f27724cd336ae14e?cid=f9cba0b4718a4d2e8e8228f8da4b755f",
+    "track_number": 12,
+    "type": "track",
+    "uri": "spotify:track:4oa14QBfWRDfJy2agySy0L",
+  },
+]
+
+
+https://developer.spotify.com/console/get-search-item/

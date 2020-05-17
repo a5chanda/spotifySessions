@@ -13,7 +13,17 @@ import { AsyncStorage } from 'react-native';
 
 export const setUserData = async (key, val) => {
     try {
-      await AsyncStorage.setItem(key, val);
+        console.log('storing', key, val);
+        if((typeof val) == "number"){            
+            // console.log("here", typeof val);
+            var v = val.toString();
+            // console.log(typeof v);
+            await AsyncStorage.setItem(key, v);
+        }
+        else{
+            await AsyncStorage.setItem(key, val);
+        }
+        
     } catch (error) {
       // Error saving data
     }

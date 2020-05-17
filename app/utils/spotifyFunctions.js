@@ -12,3 +12,16 @@ export const getValidSPObj = async () => {
     sp.setAccessToken(accessToken);
     return sp; 
 }
+
+export const makeSong = (s) =>{
+    let song = {
+        trackID: s['id'],
+        songName: s['name'],
+        album: s['album']['name'],
+        albumArt: s['album']['images'],
+        mainArtist: s['artists'][0]['name'],
+        artists: s['artists']
+    };
+    return song;
+}
+

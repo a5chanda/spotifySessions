@@ -19,7 +19,8 @@ app.get('/', (req, res) => {
 //     name: "",
 //     user: "",
 //     isHost: bool,
-//     authToken: ""
+//     authToken: "",
+//      expToken: ""
 // }
 
 function createRoom(room, socket){

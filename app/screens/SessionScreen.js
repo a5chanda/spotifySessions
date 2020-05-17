@@ -3,14 +3,14 @@ import React, { Component } from 'react';
 import { BackHandler, Image, Platform, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import { SearchBar } from 'react-native-elements';
-// import { SearchResults} from './SearchResults,js';
+import { SearchResults } from './SearchResults.js';
 
 import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
 
 import SpotifyWebAPI from 'spotify-web-api-js';
 import {getUserData} from '../utils/authorization.js';
-import {getValidSPObj} from '../utils/spotifyFunctions.js';
+import {getValidSPObj, makeSong} from '../utils/spotifyFunctions.js';
 import {socket} from '../utils/socketConnection.js'
 
 
@@ -34,9 +34,9 @@ class SessionScreen extends Component {
             joinedRoom: false,
             songQueue: [],
             songID: "",
-            searchText: "",
+            searchText: ""
         };
-
+        this.bindSong = this.bindSong.bind(this);
 
         console.log("Loading room");
         //If socket is connected, create room if the host is connecting
@@ -102,12 +102,14 @@ class SessionScreen extends Component {
     async createRoom(){
         console.log("Creating Room:", this.state['roomName'], "Host:", this.state['userProfile']['display_name']);
         let authHost = await getUserData('accessToken');
+        let expTime = await getUserData('expirationTime');
         this.socket.emit("create room", 
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
             isHost: true,
-            authToken: authHost
+            authToken: authHost,
+            expirationTime: expTime
         });
         this.setState({isCreatingRoom: false, roomCreated: true, joinedRoom: true});
     }
@@ -115,12 +117,15 @@ class SessionScreen extends Component {
     async joinRoom(){
         console.log("Joining Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
         let authHost = await getUserData('accessToken');
+        var expTime =  await getUserData('expirationTime');
+      
         this.socket.emit("join room", 
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
             isHost: false,
-            authToken: authHost
+            authToken: authHost,
+            expirationTime: expTime
         });
         this.setState({roomCreated: true, joinedRoom: true});
     }
@@ -160,29 +165,30 @@ class SessionScreen extends Component {
         this.socket.disconnect();
         this.props.navigation.goBack()
     }
-    getSong = async (data) => {
-      const sp = await getValidSPObj();
-      data = "track:" + data;
-      sp.searchTracks(data, {limit: 3, offset: 0, market: "US"} ).then(result => console.log("Song: ", result));
-    }; 
 
+    bindSong(data){
+        console.log("Bound song: ", data);
+        // this.setState({songID: data['trackID']});
+        this.addSong(data);
+        
+    }
   render(){
-    const chatMessages = this.state.songQueue.map(chatMessage => (
-        <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
-        ));
+    // const chatMessages = this.state.songQueue.map(chatMessage => (
+    //     <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
+    //     ));
+    
+  
     return ( 
          
         <View style={styles.container}>
             <Button style={styles.button} onPress={()=> this.disconnect()}>
                 <Text>Disconnect</Text>
             </Button>
-            <SearchBar
-              placeholder="Search Tracks"
-              onChangeText={searchText => {this.setState({searchText});}}
-              onSubmitEditing={() => this.getSong(this.state.searchText) }
-              value={this.state.searchText}
-            />
-        {chatMessages}
+
+        <SearchResults  searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
+        {/* {chatMessages} */}
+        
+        
         <TextInput
           style={{height: 40, borderWidth: 2, top: 500}}
           autoCorrect={false}
