@@ -9,11 +9,15 @@ import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
 
 import SpotifyWebAPI from 'spotify-web-api-js';
+import {getUserData} from '../utils/authorization.js';
 import {getValidSPObj} from '../utils/spotifyFunctions.js';
 import {socket} from '../utils/socketConnection.js'
 
 
+
+
 class SessionScreen extends Component {
+    _isMounted = false;
     constructor(props){
         super(props);
         this.socket = socket;
@@ -22,38 +26,120 @@ class SessionScreen extends Component {
             chatMessage: "",
             chatMessages: [],
             roomName: props['route']['params']['roomName'],
-            isConnected: this.socket.connected,
-            searchText: ""
+            isConnected: this.socket.connected, //if socket connection is connected
+            isCreatingRoom: props['route']['params']['isCreatingRoom'], //true if new session being created
+                                                                        //false if joining a session
+            host: props['route']['params']['host'] ? props['route']['params']['host'] : "",
+            roomCreated: props['route']['params']['roomCreated'] ? props['route']['params']['roomCreated']: null, //true if room created, false if it isnt
+            joinedRoom: false,
+            songQueue: [],
+            songID: "",
+            searchText: "",
         };
-        if(this.state.isConnected){
-            console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
-            this.socket.emit("join room", this.state.roomName);
+
+
+        console.log("Loading room");
+        //If socket is connected, create room if the host is connecting
+        if(this.state.isConnected && this.state.isCreatingRoom && !this.state.joinedRoom){
+            //if the host is the user creating the session
+            if(this.state.host === this.state.userProfile['display_name']){  
+                this.createRoom();
+            }
         }
-        
+        //Else join a room
+        else if(!this.state.joinedRoom){
+            this.joinRoom();
+        }
     }
-    
 
     componentDidMount() {
-        if(!this.socket.connected || !this.state.isConnected){
+        this._isMounted=true;
+        //if socket is disconnected, reconnect
+        if((!this.socket.connected || !this.state.isConnected)){
             this.socket.connect();
-            this.socket.emit("join room", this.state.roomName);
+            if(!this.state.roomCreated && (this.state.userProfile['display_name'] === this.state.host)){
+                this.createRoom();
+            }
+            else if(!this.state.roomCreated && !this.state.joinedRoom){
+                this.joinRoom()
+                // this.socket.emit("join room", this.state.roomName);
+            }
             this.setState({isConnected: true});
         }
-        else{
+    //    else{
+            this.socket.on("create room", isCreated => {
+                //if Room is successfully created then set state for creating to false
+                console.log("Room created:", isCreated);
+                this.setState({isCreatingRoom: !isCreated, roomCreated: isCreated});
+            })
+            this.socket.on("join room", data => {
+                console.log("Joined:", data['roomName']);
+
+                this.setState({isCreatingRoom: false, roomCreated: true, songQueue: data['Queue']});
+            });
             this.socket.on("chat message", msg => {
                 this.setState({ chatMessages: [...this.state.chatMessages, msg]});
             });
-            this.socket.on("join room", data => {
-                console.log("Data:", data);
+            this.socket.on("add song", song => { 
+                this.setState({songQueue: [...this.state.songQueue, song]});
+                console.log("Updated Queue", this.state.songQueue);
             });
-        }
+    //    }
+        
+
+        
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
+
     componentWillUnmount(){
+        this._isMounted=false;
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton());
         this.socket.disconnect();
-        this.setState({isConnected: false});
+        // this.setState({isConnected: false});
         // this.disconnect();
+    }
+
+    async createRoom(){
+        console.log("Creating Room:", this.state['roomName'], "Host:", this.state['userProfile']['display_name']);
+        let authHost = await getUserData('accessToken');
+        this.socket.emit("create room", 
+        {
+            name: this.state.roomName,
+            user: this.state.userProfile['display_name'],
+            isHost: true,
+            authToken: authHost
+        });
+        this.setState({isCreatingRoom: false, roomCreated: true, joinedRoom: true});
+    }
+
+    async joinRoom(){
+        console.log("Joining Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
+        let authHost = await getUserData('accessToken');
+        this.socket.emit("join room", 
+        {
+            name: this.state.roomName,
+            user: this.state.userProfile['display_name'],
+            isHost: false,
+            authToken: authHost
+        });
+        this.setState({roomCreated: true, joinedRoom: true});
+    }
+
+    async addSong(song){
+        this.socket.emit("add song", song);
+        this.setState({songID: ""});
+    }
+    
+    leaveRoom(){
+        console.log("Leaving Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
+        this.socket.emit("leave room", 
+        {
+            name: this.state.roomName,
+            user: this.state.userProfile['display_name'],
+            isHost: false,
+            authToken: ""
+        });
+        
     }
 
     handleBackButton() {
@@ -65,10 +151,12 @@ class SessionScreen extends Component {
         this.setState({chatMessage: ''});
         var song = "track:"+this.state.chatMessage;
         this.getSong(song);
+        this.addSong(this.state.chatMessage);
     }
 
     disconnect(){
-        this.setState({isConnected: false});
+        this.leaveRoom();
+        this.setState({isConnected: false, isCreatingRoom: null, roomCreated: false, joiningRoom: false});
         this.socket.disconnect();
         this.props.navigation.goBack()
     }
@@ -79,28 +167,14 @@ class SessionScreen extends Component {
     }; 
 
   render(){
-    // console.log("Session: ", this.state.chatMessages);
-    const chatMessages = this.state.chatMessages.map(chatMessage => (
+    const chatMessages = this.state.songQueue.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
         ));
-
-    return (
-
-      
-      <View style={styles.container}>
-          {/* <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image> */}
-          {/* <Text style={styles.logo}>Welcome {this.props.userProfile['display_name']}</Text> */}
-          
-          {/* { (this.state.isProfileLoaded && this.state.userProfile['images'].length) ? (<Image
-          style={styles.profileImage}
-          source={ {'uri': this.state.userProfile['images'][0].url} }/>) : (<View></View>)
-          } */}
-
-          {/* <Button block rounded style={styles.button}>  
-            <Text style={styles.login}>New Session</Text> 
-          </Button> */}
+    return ( 
+         
+        <View style={styles.container}>
             <Button style={styles.button} onPress={()=> this.disconnect()}>
-                 <Text>Disconnect</Text>
+                <Text>Disconnect</Text>
             </Button>
             <SearchBar
               placeholder="Search Tracks"

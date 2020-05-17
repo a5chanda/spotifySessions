@@ -46,6 +46,8 @@ class HomeScreen extends Component {
     return (
       
       <View style={styles.container}>
+        
+        {/* New Session Modal */}
         <Modal transparent={false} visible ={this.state.newSession} animationType="fade">
           <View style={styles.modalContent}>
             <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
@@ -54,13 +56,18 @@ class HomeScreen extends Component {
               <TextInput secureTextEntry={true} placeholder="Enter Password"/>
                 <Button block rounded style={styles.button} onPress={ () => {
                         if(this.state.roomName.length){
-                            this.props.navigation.navigate("Session", {"userProfile": this.state.userProfile, "roomName": this.state.roomName});
+                            this.props.navigation.navigate("Session", 
+                            {
+                                "userProfile": this.state.userProfile, 
+                                "roomName": this.state.roomName, 
+                                "host": this.state.userProfile['display_name'],
+                                "isCreatingRoom": true,
+                            });
                             this.setState({newSession: false});
                         }
                         else{
                             <Text>Please Enter Room Name</Text>
-                        }
-                        
+                        } 
                     }
                 }>  
                     <Text style={styles.login}> Create New Session</Text> 
@@ -68,18 +75,34 @@ class HomeScreen extends Component {
             </View>
           </View>
         </Modal>
-        <Modal visible ={this.state.joinSession} animationType="fade">
+        {/* Join Session Modal */}
+        <Modal transparent={false} visible ={this.state.joinSession} animationType="fade">
           <View style={styles.modalContent}>
             <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
             <View>
-              <TextInput placeholder="Enter Session Name" />
+              <TextInput placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
               <TextInput secureTextEntry={true} placeholder="Enter Password"/>
-              <Button block rounded style={styles.button}>  
+              <Button block rounded style={styles.button} onPress={ () => {
+                        if(this.state.roomName.length){
+                            this.props.navigation.navigate("Session", 
+                            {
+                                "userProfile": this.state.userProfile, 
+                                "roomName": this.state.roomName, 
+                                "isCreatingRoom": false,
+                                "roomCreated": true
+                            });
+                            this.setState({joinSession: false});
+                        }
+                        else{
+                            <Text>Please Enter Room Name</Text>
+                        }} 
+                    }>  
                   <Text style={styles.login}>Join Session</Text> 
               </Button>
             </View>
           </View>
         </Modal>
+
         <Image style={styles.welcomeImage} source={require('../assets/images/spotifysession.png')}></Image>
         <Text style={styles.logo}>Welcome {this.state.userProfile['display_name']}</Text>
 

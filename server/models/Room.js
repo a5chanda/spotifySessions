@@ -1,35 +1,47 @@
-import Member from "./Member";
-import QueueItem from "./QueueItem";
+const Member = require("./Member");
 
-export class Room{
+class Room{
 
     //1 Param Constructor
-    constructor(roomName, host){
-        this.Members = {}; // map of member objects
-        this.QueueItem = [];
+    constructor(roomName, host, password){
+        this.Members = new Map(); // map of member objects
+        this.Queue = [];
         this.roomName = roomName;
-        this.password = "";
-        this.host = new Member(host, true); //Member that is host
+        this.password = password ? password : "";
+        this.host = host; //Member that is host
     }
 
-    //2 param constructor
-    constructor(roomName, password, host){
-        this.Members = {}; // map of member objects
-        this.QueueItem = [];
-        this.roomName = roomName;
-        this.password = password;
-        this.host = new Member(host, true); //Member that is host
+
+//User Object from client{
+//     roomName: "",
+//     user: "",
+//     isHost: bool,
+//     authToken: ""
+// }
+    addMember(user){
+        let m = new Member(user);
+        console.log(m);
+        this.Members.set(user.user, m);
     }
 
-    
+    removeMember(memberName){
+        // delete this.Members[memberName];
+        this.Members.delete(memberName);
+    }
 
-    addMember(memberName){}
+    //Returns the total number of members in the room
+    getRoomSize(){
+        return Object.keys(this.Members).length;
+    }
 
-    removeMember(memberName){}
-
-    addSong(trackID){}
+    addSong(trackID){
+        this.Queue.push(trackID);
+    }
 
     playSong(trackID){}
 
     playNext(){}
 }
+
+
+module.exports = Room
