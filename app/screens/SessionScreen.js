@@ -2,7 +2,8 @@ import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
 import { BackHandler, Image, Platform, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
-import { ScrollView } from 'react-native-gesture-handler';
+import { SearchBar } from 'react-native-elements';
+// import { SearchResults} from './SearchResults,js';
 
 import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
@@ -21,7 +22,8 @@ class SessionScreen extends Component {
             chatMessage: "",
             chatMessages: [],
             roomName: props['route']['params']['roomName'],
-            isConnected: this.socket.connected
+            isConnected: this.socket.connected,
+            searchText: ""
         };
         if(this.state.isConnected){
             console.log("Session Joined - Room:", props['route']['params']['roomName'], " User:", props.route.params['userProfile']['display_name']);
@@ -65,23 +67,23 @@ class SessionScreen extends Component {
         this.getSong(song);
     }
 
-    getSong = async (data) => {
-      const sp = await getValidSPObj();
-      console.log("SONGGGGGGG\n\n\n\n\n\n\n");
-      sp.searchTracks(data, {limit: 3, offset: 0, market: "US"} ).then(result => console.log("Song: ", result.tracks.items[0]));
-    };  
-
     disconnect(){
         this.setState({isConnected: false});
         this.socket.disconnect();
         this.props.navigation.goBack()
     }
+    getSong = async (data) => {
+      const sp = await getValidSPObj();
+      data = "track:" + data;
+      sp.searchTracks(data, {limit: 3, offset: 0, market: "US"} ).then(result => console.log("Song: ", result));
+    }; 
 
   render(){
     // console.log("Session: ", this.state.chatMessages);
     const chatMessages = this.state.chatMessages.map(chatMessage => (
         <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
         ));
+
     return (
 
       
@@ -100,10 +102,15 @@ class SessionScreen extends Component {
             <Button style={styles.button} onPress={()=> this.disconnect()}>
                  <Text>Disconnect</Text>
             </Button>
-
+            <SearchBar
+              placeholder="Search Tracks"
+              onChangeText={searchText => {this.setState({searchText});}}
+              onSubmitEditing={() => this.getSong(this.state.searchText) }
+              value={this.state.searchText}
+            />
         {chatMessages}
         <TextInput
-          style={{height: 40, borderWidth: 2, top: 600}}
+          style={{height: 40, borderWidth: 2, top: 500}}
           autoCorrect={false}
           value={this.state.chatMessage}
           onSubmitEditing={() => this.submitChatMessage()}
