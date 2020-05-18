@@ -1,0 +1,20 @@
+{
+  "name": "spotifysessions",
+  "version": "1.0.0",
+  "description": "Spotify Sessions",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "cd server && npm install && node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/a5chanda/spotifySessions.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/a5chanda/spotifySessions/issues"
+  },
+  "homepage": "https://github.com/a5chanda/spotifySessions#readme"
+}

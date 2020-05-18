@@ -170,7 +170,7 @@ class LoginScreen extends Component {
         return (
             <Container style={styles.container}> 
              <View style={styles.inputView} >
-                 <Text style={styles.logo}>Spotify Sessions</Text>
+                 <Text style={styles.logo}>Syncro Sessions</Text>
              </View>
                 {(!this.state.accessTokenAvailable) ?
                     (
