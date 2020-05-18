@@ -5,6 +5,8 @@ var http = require('http').createServer(app);
 var io = require('socket.io').listen(http);
 let cors = require ('cors');
 
+var port = process.env.PORT || 3000;
+
 //Keep track of the rooms in the server
 let rooms = new Map();
 
@@ -93,6 +95,6 @@ io.on('connection', (socket) => {
   });
 });
 
-http.listen(3000, () => {
-  console.log('listening on port:3000');
+http.listen(port, () => {
+  console.log('listening on port:', port);
 });
