@@ -4,7 +4,7 @@ import {getValidSPObj, makeSong} from '../utils/spotifyFunctions.js';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import Modal from 'react-native-modal';
 import {ListItem, SearchBar} from 'react-native-elements';
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
 
 export class SearchResults extends Component{
     constructor(props){
@@ -20,7 +20,7 @@ export class SearchResults extends Component{
     getSong = async (data) => {
         const sp = await getValidSPObj();
         data = "track:" + data;
-        sp.searchTracks(data, {limit: 5, offset: 0, market: "US"} ).then(result =>{ 
+        sp.searchTracks(data, {limit: 50, offset: 0, market: "US"} ).then(result =>{ 
             let arr =[];
             (result.tracks.items).map(song => {
                 arr.push(makeSong(song));
@@ -45,6 +45,7 @@ export class SearchResults extends Component{
                     value={this.state.searchText}
                     onClear={()=> this.setState({searchResults: []})}
                 /> 
+                <ScrollView>
                 {this.state.searchResults.map((item, i) => (
                     <TouchableOpacity key={i} onPress={() => {console.log(item); this.handleChange(item)}}>
                         <ListItem
@@ -56,7 +57,7 @@ export class SearchResults extends Component{
                         />
                     </TouchableOpacity>
                 ))}
-          
+                </ScrollView>
             </View>
             
         )       

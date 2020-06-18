@@ -181,23 +181,21 @@ class SessionScreen extends Component {
     return ( 
          
         <View style={styles.container}>
+            <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
+            {/* {chatMessages} */}
             <Button style={styles.button} onPress={()=> this.disconnect()}>
-                <Text>Disconnect</Text>
+                <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
             </Button>
-
-        <SearchResults  searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
-        {/* {chatMessages} */}
         
-        
-        <TextInput
-          style={{height: 40, borderWidth: 2, top: 500}}
-          autoCorrect={false}
-          value={this.state.chatMessage}
-          onSubmitEditing={() => this.submitChatMessage()}
-          onChangeText={chatMessage => {
-            this.setState({chatMessage});
-          }}
-        />
+            <TextInput
+            style={{height: 40, borderWidth: 2, top: 500}}
+            autoCorrect={false}
+            value={this.state.chatMessage}
+            onSubmitEditing={() => this.submitChatMessage()}
+            onChangeText={chatMessage => {
+                this.setState({chatMessage});
+            }}
+            />
       </View>
     );
   }
@@ -207,17 +205,14 @@ export default SessionScreen;
 
 const styles = StyleSheet.create({
     container: {
-      height: 400,
       flex: 1,
       backgroundColor: '#F5FCFF',
     },
     button: {  
         backgroundColor:"#30ba7e",
         alignItems:"center",
-        marginBottom:10,
         width: "90%",
         marginLeft: "5%",
-        marginTop: "10%"
       }
   });
 

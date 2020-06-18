@@ -50,11 +50,11 @@ class HomeScreen extends Component {
         {/* New Session Modal */}
         <Modal transparent={false} visible ={this.state.newSession} animationType="fade">
           <View style={styles.modalContent}>
-            <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
+            <AntDesign style={{marginBottom:30}} name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
             <View>
-              <TextInput placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
-              <TextInput secureTextEntry={true} placeholder="Enter Password"/>
-                <Button block rounded style={styles.button} onPress={ () => {
+              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
+              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
+                <Button block rounded style={styles.modalButton} onPress={ () => {
                         if(this.state.roomName.length){
                             this.props.navigation.navigate("Session", 
                             {
@@ -78,11 +78,11 @@ class HomeScreen extends Component {
         {/* Join Session Modal */}
         <Modal transparent={false} visible ={this.state.joinSession} animationType="fade">
           <View style={styles.modalContent}>
-            <AntDesign name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
+            <AntDesign style={{marginBottom:30}} name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
             <View>
-              <TextInput placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
-              <TextInput secureTextEntry={true} placeholder="Enter Password"/>
-              <Button block rounded style={styles.button} onPress={ () => {
+              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
+              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
+              <Button block rounded style={styles.modalButton} onPress={ () => {
                         if(this.state.roomName.length){
                             this.props.navigation.navigate("Session", 
                             {
@@ -134,7 +134,8 @@ const styles = StyleSheet.create({
     flex:1,
     height: 50,
     width: 50,
-    marginBottom: 32
+    marginBottom: 32,
+    borderRadius: 25
   },
   logo:{
     flex:1,
@@ -163,9 +164,13 @@ const styles = StyleSheet.create({
     width: "90%",
     marginLeft: "5%",
   },
+  modalButton: {
+    width: "50%",
+    backgroundColor:"#30ba7e",
+  },
   modalContent: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
   }
 });
