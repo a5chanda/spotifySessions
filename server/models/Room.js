@@ -1,4 +1,3 @@
-
 const Member = require("./Member");
 const SpotifyWebAPI = require('spotify-web-api-node');
 
@@ -72,7 +71,7 @@ class Room{
             console.log(data['body']['devices']);
             deviceID = data['body']['devices'][0]['id'];
             sp.play( { device_id: deviceID, uris: [str]}).then((data)=>{
-                console.log("PLaying");
+                console.log("Playing");
             });
         });
 
