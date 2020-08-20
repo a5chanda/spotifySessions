@@ -183,11 +183,8 @@ class SessionScreen extends Component {
         <View style={styles.container}>
             <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
             {/* {chatMessages} */}
-            <Button style={styles.button} onPress={()=> this.disconnect()}>
-                <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
-            </Button>
         
-            <TextInput
+            {/* <TextInput
             style={{height: 40, borderWidth: 2, top: 500}}
             autoCorrect={false}
             value={this.state.chatMessage}
@@ -195,7 +192,10 @@ class SessionScreen extends Component {
             onChangeText={chatMessage => {
                 this.setState({chatMessage});
             }}
-            />
+            /> */}
+            <Button large danger style={styles.button} onPress={()=> this.disconnect()}>
+                <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
+            </Button>
       </View>
     );
   }
@@ -209,11 +209,9 @@ const styles = StyleSheet.create({
       backgroundColor: '#F5FCFF',
       marginTop: '10%',
     },
-    button: {  
-        backgroundColor:"red",
+    button: { 
         alignItems:"center",
-        width: "90%",
-        marginLeft: "5%",
+        width: "100%",
       }
   });
 
