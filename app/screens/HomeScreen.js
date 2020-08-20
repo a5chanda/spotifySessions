@@ -50,10 +50,10 @@ class HomeScreen extends Component {
         {/* New Session Modal */}
         <Modal transparent={false} visible ={this.state.newSession} animationType="fade">
           <View style={styles.modalContent}>
-            <AntDesign style={{marginBottom:30}} name="closecircleo" size={24} color="black" onPress={()=> this.setState({newSession: false}) }/>
+           
             <View>
-              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
-              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
+                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
+                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
                 <Button block rounded style={styles.modalButton} onPress={ () => {
                         if(this.state.roomName.length){
                             this.props.navigation.navigate("Session", 
@@ -73,16 +73,20 @@ class HomeScreen extends Component {
                     <Text style={styles.login}> Create New Session</Text> 
                 </Button>
             </View>
+            <AntDesign style={{marginBottom:40}} name="closecircleo" size={24} color="red" onPress={()=> this.setState({newSession: false}) }/>
           </View>
         </Modal>
+
+
         {/* Join Session Modal */}
         <Modal transparent={false} visible ={this.state.joinSession} animationType="fade">
           <View style={styles.modalContent}>
             <AntDesign style={{marginBottom:30}} name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
             <View>
-              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
-              <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
-              <Button block rounded style={styles.modalButton} onPress={ () => {
+                <Text>Session Name</Text>
+                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
+                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
+                <Button block rounded style={styles.modalButton} onPress={ () => {
                         if(this.state.roomName.length){
                             this.props.navigation.navigate("Session", 
                             {
@@ -132,29 +136,32 @@ HomeScreen.navigationOptions = {
 const styles = StyleSheet.create({
   profileImage: {
     flex:1,
-    height: 50,
-    width: 50,
+    height: 200,
+    width: 200,
     marginBottom: 32,
-    borderRadius: 25
+    borderRadius: 200/2
   },
   logo:{
-    flex:1,
+    flex:0.5,
     fontWeight:"bold",
     fontSize:25,
     color:"#30ba7e",
-    marginBottom:40
+   
   },
+
   container: {
     flexDirection: "column",
     flex:1,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "space-evenly",
     backgroundColor: '#202e3a',
   },
   welcomeImage: {
-    flex: 1,
+    flex: 1.5,
     aspectRatio: 0.9,
-    resizeMode: 'contain'
+    resizeMode: 'contain',
+    marginTop: 60
+    
   },
   button: {  
     flex:1,
@@ -167,6 +174,7 @@ const styles = StyleSheet.create({
   modalButton: {
     width: "50%",
     backgroundColor:"#30ba7e",
+    marginBottom: 1
   },
   modalContent: {
     flex: 1,
