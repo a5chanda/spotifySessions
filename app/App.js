@@ -56,7 +56,8 @@ export default function App(props) {
     return (
         <View style={styles.container}>
         {Platform.OS === 'ios' && <StatusBar barStyle="dark-content" />}
-        <NavigationContainer>
+        {/* Set default background to '#202e3a'*/}
+        <NavigationContainer theme={{colors: {background:'#202e3a' }}}> 
           <Stack.Navigator screenOptions={{headerShown: false}}>
             <Stack.Screen name="Login" component={LoginScreen} />
             <Stack.Screen name="Home" component={HomeScreen} /> 
@@ -68,6 +69,7 @@ export default function App(props) {
     );
   }
 }
+
 
 const styles = StyleSheet.create({
   container: {
