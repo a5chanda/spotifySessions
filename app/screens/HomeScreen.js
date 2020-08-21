@@ -52,7 +52,7 @@ class HomeScreen extends Component {
     
     return (
       
-      <View style={[styles.container, (this.state.newSession ? {backgroundColor: 'rgba(0,0,0,0.5)'} : '')] }>
+      <View style={[styles.container, ((this.state.newSession || this.state.joinSession) ? {backgroundColor: 'rgba(0,0,0,0.5)'} : '')] }>
         
       
         <KeyboardAvoidingView style={styles.content}>
@@ -109,18 +109,19 @@ class HomeScreen extends Component {
                         <Text style={styles.login}> Create New Session</Text> 
                     </Button>
                 </View>
-                <AntDesign style={{marginBottom:40}} name="closecircleo" size={24} color="red" onPress={()=> this.setState({newSession: false}) }/>
+                <AntDesign style={{marginBottom:"-10%"}} name="closecircleo" size={35} color="red" onPress={()=> this.setState({newSession: false}) }/>
             </View>
         </Modal>
 
         {/* Join Session Modal */}
-        <Modal transparent={false} visible ={this.state.joinSession} animationType="fade">
+        <Modal transparent={true} onBackdropPress={()=>this.setState({joinSession: false})} visible ={this.state.joinSession} animationType="fade" style={styles.modalWrapper}>
           <View style={styles.modalContent}>
-            <AntDesign style={{marginBottom:30}} name="closecircleo" size={24} color="black" onPress={()=> this.setState({joinSession: false}) }/>
+            <H2>Join Session</H2> 
+            <Text></Text>
             <View>
-                <Text></Text>
-                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
-                <TextInput style={{height: "12%", marginBottom:30, borderRadius: 5, borderWidth: 2, borderColor: "black", textAlign:"center"}} secureTextEntry={true} placeholder="Enter Password"/>
+                
+                <TextInput style={styles.modalTextInput} placeholder="Enter Session Name" onChangeText={name => this.setState({roomName: name})}/>
+                <TextInput style={styles.modalTextInput} secureTextEntry={true} placeholder="Enter Password"/>
                 <Button block rounded style={styles.modalButton} onPress={ () => {
                         if(this.state.roomName.length){
                             this.props.navigation.navigate("Session", 
@@ -139,6 +140,7 @@ class HomeScreen extends Component {
                   <Text style={styles.login}>Join Session</Text> 
               </Button>
             </View>
+            <AntDesign style={{marginBottom:"-10%"}} name="closecircleo" size={35} color="red" onPress={()=> this.setState({joinSession: false}) }/>
           </View>
         </Modal>
       
@@ -221,13 +223,15 @@ const styles = StyleSheet.create({
         //maxHeight:300, 
         borderRadius:30,
         minHeight: Math.round(Dimensions.get('window').height),
+        paddingBottom: -20
         
     },
     modalContent: {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#F7F7F2",
-        borderRadius: 30
+        borderRadius: 30,
+        
     },
     modalTextInput:{
         height: "15%", 
