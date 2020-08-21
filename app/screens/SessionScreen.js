@@ -193,9 +193,11 @@ class SessionScreen extends Component {
                 this.setState({chatMessage});
             }}
             /> */}
-            <Button large danger style={styles.button} onPress={()=> this.disconnect()}>
-                <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
-            </Button>
+            <View style={styles.button}>
+                <Button large danger onPress={()=> this.disconnect()}>
+                    <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
+                </Button>
+            </View>
       </View>
     );
   }
@@ -210,7 +212,9 @@ const styles = StyleSheet.create({
       marginTop: '10%',
     },
     button: { 
-        alignItems:"center",
+        flex:1,
+        justifyContent: 'flex-end',
+        marginBottom: '-5%',
         width: "100%",
       }
   });
