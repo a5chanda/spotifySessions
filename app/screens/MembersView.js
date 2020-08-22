@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import SpotifyWebAPI from 'spotify-web-api-js';
 import {getValidSPObj, makeSong} from '../utils/spotifyFunctions.js';
-import { Container, Header, Content, Button, Text, View } from 'native-base';
+import { H2, Container, Header, Content, Button, Text, View } from 'native-base';
 import Modal from 'react-native-modal';
-import {ListItem, SearchBar} from 'react-native-elements';
+import {Avatar, ListItem} from 'react-native-elements';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
+import { AntDesign } from '@expo/vector-icons';
 
 export class MembersView extends Component{
     constructor(props){
@@ -37,20 +38,28 @@ export class MembersView extends Component{
 
     render(){
         return(
-            <View>  
-                <ScrollView>
+            <View style={{backgroundColor:"white", marginTop: 10}}>  
+                <H2> Members </H2>
+                <ScrollView  horizontal={true} style={{}}>
                 {this.props.members.map((item, i) => (
-                    <TouchableOpacity key={i} onPress={() => {console.log(item); this.handleChange(item)}}>
+                    (item['image'] != "") ? 
+                    <ListItem containerStyle={{}} key={i} leftAvatar={{ rounded:true, source: { uri: item['image']} }}
+                            title={item.name}
+                            //subtitle={item.mainArtist}
+                            bottomDivider
+                        /> : 
                         <ListItem
                             key={i}
-                            // leftAvatar={{ rounded:false, source: { uri: item['albumArt'][0]['url']} }}
-                            title={item}
+                            leftIcon = { !item['image'] ? { size:"20",rounded:true, name: "user", type: "font-awesome"} : {}}
+                            title={item.name}
                             //subtitle={item.mainArtist}
                             bottomDivider
                         />
-                    </TouchableOpacity>
+   
+                    
                 ))}
                 </ScrollView>
+               
             </View>
             
         )       

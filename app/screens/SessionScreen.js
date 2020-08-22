@@ -58,6 +58,8 @@ class SessionScreen extends Component {
 
     componentDidMount() {
         this._isMounted=true;
+
+
         //if socket is disconnected, reconnect
         if((!this.socket.connected || !this.state.isConnected)){
             this.socket.connect();
@@ -70,7 +72,8 @@ class SessionScreen extends Component {
             }
             this.setState({isConnected: true});
         }
-    
+        
+        //Listener from server when room is created
         this.socket.on("create room", data => {
             //if Room is successfully created then set state for creating to false
             console.log("Room created:", data['isCreated']);
@@ -78,21 +81,25 @@ class SessionScreen extends Component {
             
         });
 
+        //Listener from server when user is joined to a room
         this.socket.on("join room", data => {
             console.log("Joined:", data);
 
             this.setState({isCreatingRoom: false, roomCreated: true, songQueue: data['Queue'], members: data['MemberNames']});
             console.log("Members: ", data['MemberNames']);
         });
+
         this.socket.on("chat message", msg => {
             this.setState({ chatMessages: [...this.state.chatMessages, msg]});
         });
+
+        //Listener when song is successfully added to queue
         this.socket.on("add song", song => { 
             this.setState({songQueue: [...this.state.songQueue, song]});
             console.log("Updated Queue", this.state.songQueue);
         });
 
-        //When someone leaves the room
+        //Listener for when someone leaves the room
         this.socket.on ("leave room", data => {
             this.setState({members: data['MemberNames']});
         });
@@ -116,6 +123,7 @@ class SessionScreen extends Component {
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
+            profileImage: (this.state.userProfile['images'] != undefined) ? this.state.userProfile['images'][0].url : "",
             isHost: true,
             authToken: authHost,
             expirationTime: expTime
@@ -127,11 +135,11 @@ class SessionScreen extends Component {
         console.log("Joining Room: ", this.state.roomName, "Member:", this.state['userProfile']['display_name']);
         let authHost = await getUserData('accessToken');
         var expTime =  await getUserData('expirationTime');
-      
         this.socket.emit("join room", 
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
+            profileImage: ((this.state.userProfile['images'] != "") ? this.state.userProfile['images'][0].url : ""),
             isHost: false,
             authToken: authHost,
             expirationTime: expTime
@@ -192,7 +200,7 @@ class SessionScreen extends Component {
         <View style={styles.container}>
             <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
 
-            {(this.state.members) ? <MembersView members={this.state.members} /> : <View></View>}
+            <MembersView members={this.state.members} /> 
             {/* {chatMessages} */}
         
             {/* <TextInput

@@ -4,8 +4,6 @@ import { Dimensions, Image, Platform, StyleSheet,TouchableHighlight, TouchableOp
 import { Container, Header, Content, Button, Text, View, H1, H2, H3 } from 'native-base';
 import Modal from 'react-native-modal';
 
-import {Overlay} from 'react-native-elements';
-import { ScrollView } from 'react-native-gesture-handler';
 
 import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
