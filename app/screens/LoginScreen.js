@@ -168,26 +168,29 @@ class LoginScreen extends Component {
     
     render() {
         return (
-            <Container style={styles.container}> 
-             <View style={styles.inputView} >
-                 <Text style={styles.logo}>Syncro Sessions</Text>
-             </View>
-                {(!this.state.accessTokenAvailable) ?
-                    (
-                        <Button block rounded style={styles.button} onPress={() => this.login()}> 
-                            <Text style={styles.login}>Login</Text> 
-                        </Button>
-                    ) :
-                    (   
-                        <View>
-                            <Button block rounded style={styles.button} onPress={() => this.props.navigation.navigate('Home')}> 
-                                <Text style={styles.login}>Continue</Text> 
-                            </Button> 
-                        </View>
-                        
-                    )
-                }
-            </Container>
+            <View style={styles.container}> 
+                <View style={styles.logo} >
+                    <Text style={styles.logo}>Syncro Sessions</Text>
+                </View>
+
+                <View>
+                    {(!this.state.accessTokenAvailable) ?
+                        (
+                            <Button block rounded style={styles.button} onPress={() => this.login()}> 
+                                <Text style={styles.login}>Login</Text> 
+                            </Button>
+                        ) :
+                        (   
+                            
+                                <Button block rounded style={styles.button} onPress={() => this.props.navigation.navigate('Home')}> 
+                                    <Text style={styles.login}>Continue</Text> 
+                                </Button> 
+                            
+                            
+                        )
+                    }
+                </View>
+            </View>
         );
     }
 }
@@ -196,13 +199,13 @@ export default LoginScreen;
 
 const styles = StyleSheet.create({
     button: {  
+        flex: 1,
         backgroundColor:"#30ba7e",
         alignItems:"center",
         justifyContent:"center",
         marginTop:40,
         marginBottom:10,
         width: "90%",
-        marginLeft: "5%"
     },
     login: {
         color: "white"

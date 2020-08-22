@@ -4,6 +4,8 @@ import { BackHandler, Image, Platform, StyleSheet, TouchableOpacity, TextInput }
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import { SearchBar } from 'react-native-elements';
 import { SearchResults } from './SearchResults.js';
+import { MembersView } from './MembersView.js';
+
 
 import { MonoText } from '../components/StyledText';
 import { isRequired } from 'react-native/Libraries/DeprecatedPropTypes/DeprecatedColorPropType';
@@ -34,7 +36,9 @@ class SessionScreen extends Component {
             joinedRoom: false,
             songQueue: [],
             songID: "",
-            searchText: ""
+            searchText: "",
+
+            members: [] //array of room members
         };
         this.bindSong = this.bindSong.bind(this);
 
@@ -66,27 +70,32 @@ class SessionScreen extends Component {
             }
             this.setState({isConnected: true});
         }
-    //    else{
-            this.socket.on("create room", isCreated => {
-                //if Room is successfully created then set state for creating to false
-                console.log("Room created:", isCreated);
-                this.setState({isCreatingRoom: !isCreated, roomCreated: isCreated});
-            })
-            this.socket.on("join room", data => {
-                console.log("Joined:", data['roomName']);
+    
+        this.socket.on("create room", data => {
+            //if Room is successfully created then set state for creating to false
+            console.log("Room created:", data['isCreated']);
+            this.setState({isCreatingRoom: !data['isCreated'], roomCreated: data['isCreated'], members: data['MemberNames'] });
+            
+        });
 
-                this.setState({isCreatingRoom: false, roomCreated: true, songQueue: data['Queue']});
-            });
-            this.socket.on("chat message", msg => {
-                this.setState({ chatMessages: [...this.state.chatMessages, msg]});
-            });
-            this.socket.on("add song", song => { 
-                this.setState({songQueue: [...this.state.songQueue, song]});
-                console.log("Updated Queue", this.state.songQueue);
-            });
-    //    }
-        
+        this.socket.on("join room", data => {
+            console.log("Joined:", data);
 
+            this.setState({isCreatingRoom: false, roomCreated: true, songQueue: data['Queue'], members: data['MemberNames']});
+            console.log("Members: ", data['MemberNames']);
+        });
+        this.socket.on("chat message", msg => {
+            this.setState({ chatMessages: [...this.state.chatMessages, msg]});
+        });
+        this.socket.on("add song", song => { 
+            this.setState({songQueue: [...this.state.songQueue, song]});
+            console.log("Updated Queue", this.state.songQueue);
+        });
+
+        //When someone leaves the room
+        this.socket.on ("leave room", data => {
+            this.setState({members: data['MemberNames']});
+        });
         
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
@@ -182,6 +191,8 @@ class SessionScreen extends Component {
          
         <View style={styles.container}>
             <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
+
+            {(this.state.members) ? <MembersView members={this.state.members} /> : <View></View>}
             {/* {chatMessages} */}
         
             {/* <TextInput
