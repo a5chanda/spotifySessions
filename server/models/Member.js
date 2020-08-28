@@ -4,7 +4,8 @@ class Member{
         this.isHost = user.isHost,
         this.authToken = user.authToken,
         this.expTime = parseFloat(user.expirationTime),
-        this.userID = user['id'] ? user['id'] : ""
+        this.userID = user['id'] ? user['id'] : "",
+        this.profileImage = user['profileImage']
     }
     updateToken(token){
         this.authToken = token;

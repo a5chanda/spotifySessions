@@ -32,7 +32,8 @@ function createRoom(room, socket){
     rooms.set(room.name, newRoom);
     socket.join(room.name);
     console.log(rooms);
-    io.sockets.in(room.name).emit('create room', true);
+    console.log("Room JSON", JSON.stringify(newRoom));
+    io.sockets.in(room.name).emit('create room', {isCreated: true, "MemberNames": newRoom['MemberNames']});
 }
 
 function joinRoom(room, socket){
@@ -46,6 +47,7 @@ function joinRoom(room, socket){
         let r = rooms.get(room.name);
         r.addMember(room);
         console.log("Rooms", rooms);
+        //r['MemberNames'] = Array.from(r['Members'].keys()); //send back member names
         io.sockets.in(room.name).emit('join room', r);
     });
 }
@@ -53,11 +55,11 @@ function joinRoom(room, socket){
 async function leaveRoom(room, socket){
     let r = await rooms.get(room.name);
     r.removeMember(room.user);
-    io.sockets.in(room.name).emit("leave room", "User:" + room.user + "left the room");
+    io.sockets.in(room.name).emit("leave room", r);
 
     //Delete the room if there are no members left
     if(r.getRoomSize() == 0){
-        rooms.delete(room.name);
+       rooms.delete(room.name);
     }
     console.log(rooms);
     socket.leave(room.name);

@@ -13,6 +13,7 @@ class Room{
         this.roomName = roomName;
         this.password = password ? password : "";
         this.host = host; //Member that is host
+        this.MemberNames = []; //array of member names and images
     }
 
     async getValidSPObj(user){
@@ -41,11 +42,17 @@ class Room{
         let m = new Member(user);
         console.log(m);
         this.Members.set(user.user, m);
+        //for(let i = 0; i < 5; i++){
+            this.MemberNames.push({"name": user.user, "image": user['profileImage']});
+        //}
+        
     }
 
     removeMember(memberName){
-        // delete this.Members[memberName];
         this.Members.delete(memberName);
+        let index = this.MemberNames.map(user => user.name).indexOf(memberName);
+        this.MemberNames.splice(index, 1);
+        
     }
 
     //Returns the total number of members in the room
