@@ -235,9 +235,8 @@ const styles = StyleSheet.create({
         height: "15%", 
         marginBottom:30, 
         borderRadius: 5, 
-        borderWidth: 2, 
-        borderColor: "black", 
-        textAlign:"center"
+        borderBottomWidth: 2, 
+        borderColor: "#30ba7e"
     }
 
 });
