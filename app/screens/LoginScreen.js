@@ -1,5 +1,5 @@
 import React, { Component, useCallback, useState } from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, NativeModules} from 'react-native';
 
 import { Container, Header, Content, Button, Text, View } from 'native-base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
@@ -69,7 +69,8 @@ class LoginScreen extends Component {
               credentials.clientId +
               (scopes ? '&scope=' + encodeURIComponent(scopes) : '') +
               '&redirect_uri=' +
-              encodeURIComponent(redirectUrl),
+              encodeURIComponent(redirectUrl) +
+              '&show_dialog=true' ,
           });
           
           if(result.params.code){
@@ -181,12 +182,9 @@ class LoginScreen extends Component {
                             </Button>
                         ) :
                         (   
-                            
                                 <Button block rounded style={styles.button} onPress={() => this.props.navigation.navigate('Home')}> 
                                     <Text style={styles.login}>Continue</Text> 
                                 </Button> 
-                            
-                            
                         )
                     }
                 </View>

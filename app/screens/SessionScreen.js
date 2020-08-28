@@ -123,7 +123,7 @@ class SessionScreen extends Component {
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
-            profileImage: (this.state.userProfile['images'] != undefined) ? this.state.userProfile['images'][0].url : "",
+            profileImage: (this.state.userProfile['images'] != "") ? this.state.userProfile['images'][0].url : "",
             isHost: true,
             authToken: authHost,
             expirationTime: expTime
@@ -139,7 +139,7 @@ class SessionScreen extends Component {
         {
             name: this.state.roomName,
             user: this.state.userProfile['display_name'],
-            profileImage: ((this.state.userProfile['images'] != "") ? this.state.userProfile['images'][0].url : ""),
+            profileImage: ( (this.state.userProfile['images'][0] != "") ? this.state.userProfile['images'][0].url : ""),
             isHost: false,
             authToken: authHost,
             expirationTime: expTime

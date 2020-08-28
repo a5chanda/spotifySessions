@@ -53,15 +53,16 @@ function joinRoom(room, socket){
 }
 
 async function leaveRoom(room, socket){
+    await (rooms.get(room.name)).removeMember(room.user);
     let r = await rooms.get(room.name);
-    r.removeMember(room.user);
+    
     io.sockets.in(room.name).emit("leave room", r);
 
     //Delete the room if there are no members left
     if(r.getRoomSize() == 0){
        rooms.delete(room.name);
     }
-    console.log(rooms);
+    console.log("Member left", rooms);
     socket.leave(room.name);
 }
 

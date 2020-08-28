@@ -50,7 +50,7 @@ export class MembersView extends Component{
                         /> : 
                         <ListItem
                             key={i}
-                            leftIcon = { !item['image'] ? { size:"20",rounded:true, name: "user", type: "font-awesome"} : {}}
+                            leftIcon = { !item['image'] ? { size:20,rounded:true, name: "user", type: "font-awesome"} : {}}
                             title={item.name}
                             //subtitle={item.mainArtist}
                             bottomDivider
