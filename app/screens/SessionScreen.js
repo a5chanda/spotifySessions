@@ -2,9 +2,12 @@ import * as WebBrowser from 'expo-web-browser';
 import React, { Component } from 'react';
 import { BackHandler, Image, Platform, StyleSheet, TouchableOpacity, TextInput } from 'react-native';
 import { Container, Header, Content, Button, Text, View } from 'native-base';
-import { SearchBar } from 'react-native-elements';
+
+
+//Custom Component imports
 import { SearchResults } from './SearchResults.js';
-import { MembersView } from './MembersView.js';
+import { MembersView } from '../components/MembersView.js';
+import { QueueView } from '../components/QueueView';
 
 
 import { MonoText } from '../components/StyledText';
@@ -41,6 +44,7 @@ class SessionScreen extends Component {
             members: [] //array of room members
         };
         this.bindSong = this.bindSong.bind(this);
+        this.bindPlaySong = this.bindPlaySong.bind(this);
 
         console.log("Loading room");
         //If socket is connected, create room if the host is connecting
@@ -96,13 +100,20 @@ class SessionScreen extends Component {
         //Listener when song is successfully added to queue
         this.socket.on("add song", song => { 
             this.setState({songQueue: [...this.state.songQueue, song]});
-            console.log("Updated Queue", this.state.songQueue);
+            console.log("Updated Queue", this.state.songQueue.length);
+        });
+
+        //Listener for when song is chosen to play from queue
+        this.socket.on("play song", song =>{
+            console.log("Playing song", song['songName']);
         });
 
         //Listener for when someone leaves the room
         this.socket.on ("leave room", data => {
             this.setState({members: data['MemberNames']});
         });
+
+        
         
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
     }
@@ -147,9 +158,13 @@ class SessionScreen extends Component {
         this.setState({roomCreated: true, joinedRoom: true});
     }
 
+    //Adds song to Queue
     async addSong(song){
         this.socket.emit("add song", song);
-        this.setState({songID: ""});
+    }
+
+    async playSong(song){
+        this.socket.emit("play song", song);
     }
     
     leaveRoom(){
@@ -183,42 +198,49 @@ class SessionScreen extends Component {
         this.props.navigation.goBack()
     }
 
-    bindSong(data){
+    //adds song from search results component to queue
+    async bindSong(data){
         console.log("Bound song: ", data);
         // this.setState({songID: data['trackID']});
-        this.addSong(data);
-        
+        await this.addSong(data);
     }
-  render(){
+
+    async bindPlaySong(data){
+        console.log("Playing song", data);
+        await this.playSong(data);
+    }
+    render(){
     // const chatMessages = this.state.songQueue.map(chatMessage => (
     //     <Text style={{borderWidth: 2, top: 500}}>{chatMessage}</Text>
     //     ));
     
   
-    return ( 
-         
-        <View style={styles.container}>
-            <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
+        return (      
+            <View style={styles.container}>
+                {/* Searches for song and then binds the selected song to selected song to the bindSong function*/}
+                <SearchResults searchText = {this.state.searchText} selectedSong={this.bindSong} /> 
 
-            <MembersView members={this.state.members} /> 
-            {/* {chatMessages} */}
-        
-            {/* <TextInput
-            style={{height: 40, borderWidth: 2, top: 500}}
-            autoCorrect={false}
-            value={this.state.chatMessage}
-            onSubmitEditing={() => this.submitChatMessage()}
-            onChangeText={chatMessage => {
-                this.setState({chatMessage});
-            }}
-            /> */}
-            <View style={styles.button}>
-                <Button large danger onPress={()=> this.disconnect()}>
-                    <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
-                </Button>
-            </View>
-      </View>
-    );
+                <MembersView members={this.state.members} /> 
+                <QueueView queue={this.state.songQueue} song={this.bindPlaySong}/>
+                
+                {/* {chatMessages} */}
+            
+                {/* <TextInput
+                style={{height: 40, borderWidth: 2, top: 500}}
+                autoCorrect={false}
+                value={this.state.chatMessage}
+                onSubmitEditing={() => this.submitChatMessage()}
+                onChangeText={chatMessage => {
+                    this.setState({chatMessage});
+                }}
+                /> */}
+                <View style={styles.button}>
+                    <Button large danger onPress={()=> this.disconnect()}>
+                        <Text style={{textAlign:"center", flex:1}}>Disconnect</Text>
+                    </Button>
+                </View>
+        </View>
+        );
   }
 }
 
@@ -235,6 +257,6 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-end',
         marginBottom: '-5%',
         width: "100%",
-      }
-  });
+    }
+});
 

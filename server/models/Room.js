@@ -1,5 +1,6 @@
 const Member = require("./Member");
 const SpotifyWebAPI = require('spotify-web-api-node');
+const https = require('https')
 
 
 // export const 
@@ -62,7 +63,11 @@ class Room{
 
     addSong(song){
         this.Queue.push(song);
-        this.playSong(song['trackID']);
+        //this.playSong(song['trackID']);
+    }
+
+    async play(song){
+        await this.playSong(song['trackID']);
     }
 
     async playSong(trackID){

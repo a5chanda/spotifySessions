@@ -43,7 +43,7 @@ export class MembersView extends Component{
                 <ScrollView  horizontal={true} style={{}}>
                 {this.props.members.map((item, i) => (
                     (item['image'] != "") ? 
-                    <ListItem containerStyle={{color:"#383737"}} key={i} leftAvatar={{ rounded:true, source: { uri: item['image']} }}
+                    <ListItem containerStyle={{backgroundColor:"#30ba7e"}} key={i} leftAvatar={{ rounded:true, source: { uri: item['image']} }}
                             title={item.name}
                             //subtitle={item.mainArtist}
                             bottomDivider

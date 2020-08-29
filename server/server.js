@@ -91,6 +91,14 @@ io.on('connection', (socket) => {
         io.sockets.in(roomName).emit("add song", trackID);
     });
 
+    socket.on('play song', (trackID) => {
+        let roomName = Object.keys(socket.rooms)[1];
+        let r = rooms.get(roomName);
+        r.play(trackID);
+        console.log("Playing song", trackID);
+        io.sockets.in(roomName).emit("play song", trackID);
+    });
+
 
   socket.on('disconnect', () => {
     var roomName = Object.keys(socket.rooms)[1]; 
