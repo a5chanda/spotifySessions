@@ -39,11 +39,14 @@ export class SearchResults extends Component{
         return(
             <View>  
                 <SearchBar
+                    round = {true}
                     placeholder="Search Tracks"
                     onChangeText={searchText => {this.setState({searchText});}}
                     onSubmitEditing={() => this.getSong(this.state.searchText) }
                     value={this.state.searchText}
                     onClear={()=> this.setState({searchResults: []})}
+                    underlineColorAndroid = "#30ba7e"
+                    containerStyle={{backgroundColor:"#30ba7e", borderBottomColor:"transparent", borderTopColor:"transparent"}}
                 /> 
                 <ScrollView>
                 {this.state.searchResults.map((item, i) => (

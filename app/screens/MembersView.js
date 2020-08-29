@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import SpotifyWebAPI from 'spotify-web-api-js';
 import {getValidSPObj, makeSong} from '../utils/spotifyFunctions.js';
-import { H2, Container, Header, Content, Button, Text, View } from 'native-base';
+import {Container, Header, Content, Button, Text, View } from 'native-base';
 import Modal from 'react-native-modal';
 import {Avatar, ListItem} from 'react-native-elements';
 import { TouchableOpacity, ScrollView } from 'react-native-gesture-handler';
@@ -38,28 +38,26 @@ export class MembersView extends Component{
 
     render(){
         return(
-            <View style={{backgroundColor:"white", marginTop: 10}}>  
-                <H2> Members </H2>
+            <View style={{backgroundColor:"#383737", paddingTop: 10}}>  
+                <Text style={{fontSize:25, fontWeight:'bold', marginBottom:10, color:'white'}}> Members</Text>
                 <ScrollView  horizontal={true} style={{}}>
                 {this.props.members.map((item, i) => (
                     (item['image'] != "") ? 
-                    <ListItem containerStyle={{}} key={i} leftAvatar={{ rounded:true, source: { uri: item['image']} }}
+                    <ListItem containerStyle={{color:"#383737"}} key={i} leftAvatar={{ rounded:true, source: { uri: item['image']} }}
                             title={item.name}
                             //subtitle={item.mainArtist}
                             bottomDivider
                         /> : 
                         <ListItem
                             key={i}
+                            containerStyle={{backgroundColor:"#30ba7e"}}
                             leftIcon = { !item['image'] ? { size:20,rounded:true, name: "user", type: "font-awesome"} : {}}
                             title={item.name}
                             //subtitle={item.mainArtist}
                             bottomDivider
                         />
-   
-                    
                 ))}
                 </ScrollView>
-               
             </View>
             
         )       
