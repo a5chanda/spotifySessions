@@ -1,4 +1,6 @@
-# Spotify Sessions
+# SyncroSessions
+
+![](https://github.com/a5chanda/spotifySessions/blob/master/app/assets/images/spotifysession.png)
 
 ## Inspiration
 Often times when we are out driving with friends or family, we typically have to use the driver's phone to control the music through Spotify. This proved to be very tedious as the driver would have to unlock their phone and hand it over to whoever wanted to change the song. Hence, we came up with Syncro, a Spotify session app allowing users to make rooms/sessions where everyone can control the music.
